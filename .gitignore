@@ -85,7 +85,7 @@ playwright-report/
 
 # Logs, databases, dumps, and local runtime data
 *.log
-logs/
+/logs/
 *.sqlite
 *.sqlite3
 *.db
