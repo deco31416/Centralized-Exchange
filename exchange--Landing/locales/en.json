@@ -1,0 +1,128 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "active": "Active",
+    "inactive": "Inactive",
+    "online": "Online",
+    "offline": "Offline",
+    "verified": "Verified",
+    "amount": "Amount",
+    "price": "Price",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Actions",
+    "date": "Date",
+    "type": "Type",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "send": "Send",
+    "buy": "Buy",
+    "sell": "Sell"
+  },
+  "empty": {
+    "title": "No data available",
+    "description": "There is no information to show yet.",
+    "noOffers": "No offers available right now.",
+    "noOrders": "You have no orders yet.",
+    "noAds": "You have no ads published.",
+    "noChats": "You have no conversations yet.",
+    "noUsers": "No users found.",
+    "noMessages": "No messages in this chat yet.",
+    "backendPending": "This section will activate when the P2P backend is available."
+  },
+  "p2p": {
+    "nav": {
+      "dashboard": "Home",
+      "market": "Market",
+      "exchange": "Convert",
+      "myAds": "My Ads",
+      "orders": "Orders",
+      "chat": "Chat",
+      "users": "Users",
+      "settings": "Settings"
+    },
+    "market": {
+      "title": "P2P Market",
+      "subtitle": "Buy and sell cryptocurrencies with other users",
+      "tabBuy": "Buy",
+      "tabSell": "Sell",
+      "advertiser": "Advertiser",
+      "limitsAvailable": "Limits / Available",
+      "payment": "Payment",
+      "trade": "Trade",
+      "completion": "completion",
+      "ordersCount": "orders",
+      "minutes": "min",
+      "filterAmount": "Amount",
+      "filterMethod": "Payment method",
+      "filterCurrency": "Fiat currency",
+      "verifiedOnly": "Verified only",
+      "onlineOnly": "Online only",
+      "noOffers": "No offers for the selected filters.",
+      "buyButton": "Buy {crypto}",
+      "sellButton": "Sell {crypto}"
+    },
+    "exchange": {
+      "title": "Convert",
+      "subtitle": "Swap fiat to crypto, crypto to crypto or fiat to fiat",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "rate": "Rate",
+      "fee": "Fee",
+      "selectPaymentMethod": "Select payment method",
+      "confirm": "Confirm conversion"
+    },
+    "orders": {
+      "title": "Orders",
+      "subtitle": "Your P2P operations history",
+      "filterStatus": "Status",
+      "filterType": "Type",
+      "filterDate": "Date range",
+      "statusCompleted": "Completed",
+      "statusProcessing": "Processing",
+      "statusCancelled": "Cancelled",
+      "statusDisputed": "Disputed",
+      "viewDetails": "View details"
+    },
+    "myAds": {
+      "title": "My Ads",
+      "subtitle": "Manage your buy and sell ads",
+      "newAd": "New ad",
+      "togglePublish": "Publish / Pause",
+      "noAds": "You have no ads published yet."
+    },
+    "chat": {
+      "title": "Chat",
+      "subtitle": "Conversations with other users",
+      "placeholder": "Type a message...",
+      "send": "Send",
+      "selectChat": "Select a conversation to start",
+      "noChats": "You have no conversations yet."
+    },
+    "users": {
+      "title": "P2P Users",
+      "subtitle": "Verified merchants in the network",
+      "filterRole": "Role",
+      "viewProfile": "View profile"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "P2P account configuration",
+      "tabProfile": "Profile",
+      "tabAccount": "Account",
+      "tabPayment": "Payments",
+      "tabNotifications": "Notifications"
+    }
+  }
+}

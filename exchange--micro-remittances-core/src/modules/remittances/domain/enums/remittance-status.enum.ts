@@ -1,0 +1,8 @@
+export enum RemittanceStatus {
+  CREATED = 'CREATED',
+  CONFIRMED = 'CONFIRMED',
+  SENT = 'SENT',
+  RECEIVED = 'RECEIVED',
+  CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
+}

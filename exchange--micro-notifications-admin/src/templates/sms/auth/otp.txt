@@ -1,0 +1,7 @@
+Your verification code is: {{code}}
+
+This code expires in {{expirationMinutes}} minutes. Do not share this code with anyone.
+
+{{#if displayName}}
+- {{displayName}} Account Security
+{{/if}}

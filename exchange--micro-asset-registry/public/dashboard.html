@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECO31416 — Asset Registry v1.0.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #05070a;
+            --bg-1: #0a0e14;
+            --bg-2: #111827;
+            --bg-3: #1a2236;
+            --bg-hover: #1e293b;
+            --border: #1e293b;
+            --border-dim: #151d2e;
+            --text-0: #f8fafc;
+            --text-1: #e2e8f0;
+            --text-2: #94a3b8;
+            --text-3: #64748b;
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --purple: #a78bfa;
+            --orange: #f97316;
+            --green-bg: rgba(16,185,129,.08);
+            --red-bg: rgba(239,68,68,.08);
+            --blue-bg: rgba(59,130,246,.08);
+            --purple-bg: rgba(167,139,250,.08);
+            --amber-bg: rgba(245,158,11,.08);
+            --orange-bg: rgba(249,115,22,.08);
+            --cyan-bg: rgba(34,211,238,.06);
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: var(--sans); background: var(--bg-0); color: var(--text-1); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+        /* ─── Topbar ─── */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 52px;
+            background: rgba(5,7,10,.85); backdrop-filter: blur(12px) saturate(1.4);
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 14px; }
+        .brand {
+            font-family: var(--mono); font-weight: 800; font-size: 18px; letter-spacing: 3px;
+            background: linear-gradient(135deg, #f97316 0%, #f59e0b 50%, #22d3ee 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; text-transform: uppercase; font-family: var(--mono);
+        }
+        .chip-service { background: var(--cyan-bg); color: var(--cyan); border: 1px solid rgba(34,211,238,.2); }
+        .chip-version { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+        .chip-env { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .topbar-time { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+        .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); position: relative; }
+        .pulse::after { content:''; position:absolute; top:-3px; left:-3px; width:13px; height:13px; border-radius:50%; border:1.5px solid var(--green); animation: pulse-ring 2s ease-out infinite; }
+        @keyframes pulse-ring { 0%{opacity:.8;transform:scale(.8)} 100%{opacity:0;transform:scale(1.6)} }
+
+        .conn-chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; font-family: var(--mono); display: inline-flex;
+            align-items: center; gap: 5px; transition: all .3s;
+        }
+        .conn-chip .conn-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .conn-connected { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .conn-connected .conn-dot { background: var(--green); }
+        .conn-disconnected { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+        .conn-disconnected .conn-dot { background: var(--red); }
+        .conn-checking { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(245,158,11,.2); }
+        .conn-checking .conn-dot { background: var(--amber); animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        /* ─── Layout ─── */
+        .shell { max-width: 1600px; margin: 0 auto; padding: 20px 24px 40px; }
+
+        /* ─── Actions ─── */
+        .actions { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .act-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: var(--sans);
+            border-radius: 6px; border: 1px solid var(--border); background: var(--bg-2);
+            color: var(--text-2); cursor: pointer; transition: all .15s; text-decoration: none;
+        }
+        .act-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+        .act-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+        .act-btn.primary:hover { background: #2563eb; }
+        .act-btn.orange { background: var(--orange-bg); border-color: rgba(249,115,22,.3); color: var(--orange); }
+        .act-btn.orange:hover { background: var(--orange); color: #fff; }
+
+        /* ─── KPI Strip ─── */
+        .kpi-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+        .kpi {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px 16px; position: relative; overflow: hidden;
+        }
+        .kpi::before {
+            content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent); opacity: .4;
+        }
+        .kpi.kpi-orange::before { background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+        .kpi.kpi-green::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+        .kpi.kpi-amber::before { background: linear-gradient(90deg, transparent, var(--amber), transparent); }
+        .kpi.kpi-purple::before { background: linear-gradient(90deg, transparent, var(--purple), transparent); }
+        .kpi.kpi-cyan::before { background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        .kpi-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .kpi-value { font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--text-0); line-height: 1; }
+        .kpi-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; font-family: var(--mono); }
+
+        /* ─── Panels / Tables ─── */
+        .panel {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 10px;
+            overflow: hidden; margin-bottom: 16px;
+        }
+        .panel-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 20px; border-bottom: 1px solid var(--border-dim);
+        }
+        .panel-title { font-size: 13px; font-weight: 600; color: var(--text-1); display: flex; align-items: center; gap: 8px; }
+        .panel-title .dot { width:6px; height:6px; border-radius:50%; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 600;
+            color: var(--text-3); text-transform: uppercase; letter-spacing: .8px;
+            background: var(--bg-0); border-bottom: 1px solid var(--border-dim); white-space: nowrap;
+        }
+        tbody td {
+            padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border-dim);
+            vertical-align: middle; transition: background .1s;
+        }
+        tbody tr:hover td { background: var(--bg-hover); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        /* ─── Filter Tabs ─── */
+        .filter-tabs { display: flex; gap: 6px; }
+        .filter-tab {
+            font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 4px 12px;
+            border-radius: 4px; border: 1px solid var(--border-dim); background: transparent;
+            color: var(--text-3); cursor: pointer; transition: all .15s;
+        }
+        .filter-tab:hover { border-color: var(--border); color: var(--text-2); }
+        .filter-tab.active { background: var(--blue-bg); color: var(--blue); border-color: rgba(59,130,246,.3); }
+
+        /* ─── Asset Cells ─── */
+        .asset-cell { display: flex; align-items: center; gap: 10px; }
+        .asset-icon {
+            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 11px; font-family: var(--mono); color: #fff;
+            overflow: hidden; flex-shrink: 0; background: var(--bg-3);
+        }
+        .asset-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .asset-name { font-weight: 700; font-size: 14px; color: var(--text-0); }
+        .asset-full { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+        .fallback {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 100%; border-radius: 50%;
+            font-weight: 700; font-size: 10px; font-family: var(--mono); color: #fff;
+        }
+        .fb-crypto { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .fb-fiat { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .fb-launchpad { background: linear-gradient(135deg, #a78bfa, #c4b5fd); }
+
+        /* ─── Pills ─── */
+        .pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px; text-transform: uppercase;
+        }
+        .pill-crypto { background: var(--amber-bg); color: var(--amber); }
+        .pill-fiat { background: var(--blue-bg); color: var(--blue); }
+        .pill-enabled { background: var(--green-bg); color: var(--green); }
+        .pill-disabled { background: var(--red-bg); color: var(--red); }
+        .pill-blockchain { background: var(--purple-bg); color: var(--purple); }
+        .pill-rail { background: var(--cyan-bg); color: var(--cyan); }
+        .pill-kyc { background: var(--orange-bg); color: var(--orange); }
+        .pill-net {
+            display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 600;
+            padding: 2px 6px; border-radius: 3px; margin: 1px 2px;
+            background: var(--bg-3); color: var(--text-2); border: 1px solid var(--border-dim);
+        }
+        .mono { font-family: var(--mono); }
+        .mono-sm { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+
+        /* ─── Network Cards ─── */
+        .net-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; padding: 16px; }
+        .net-card {
+            background: var(--bg-0); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 16px; transition: border-color .15s; position: relative; overflow: hidden;
+        }
+        .net-card:hover { border-color: var(--border); }
+        .net-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: .6;
+        }
+        .net-card.bc::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+        .net-card.rf::before { background: linear-gradient(90deg, var(--cyan), var(--green)); }
+        .net-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .net-card-code { font-family: var(--mono); font-weight: 800; font-size: 16px; color: var(--text-0); }
+        .net-card-name { font-size: 12px; color: var(--text-3); margin-bottom: 10px; }
+        .net-card-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); padding: 3px 0; border-bottom: 1px solid var(--border-dim); }
+        .net-card-row:last-child { border-bottom: none; }
+        .net-card-row .val { font-family: var(--mono); font-weight: 600; color: var(--text-1); }
+
+        /* ─── Detail Modal ─── */
+        .modal-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.6); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal {
+            background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px;
+            width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+            padding: 0; animation: modalIn .2s ease-out;
+        }
+        @keyframes modalIn { from { opacity:0; transform:scale(.95) translateY(10px); } to { opacity:1; transform:none; } }
+        .modal-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; border-bottom: 1px solid var(--border-dim);
+        }
+        .modal-title { font-family: var(--mono); font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+        .modal-close {
+            width: 32px; height: 32px; border-radius: 6px; background: var(--bg-2);
+            border: 1px solid var(--border-dim); color: var(--text-3); font-size: 16px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all .15s;
+        }
+        .modal-close:hover { background: var(--red-bg); color: var(--red); border-color: rgba(239,68,68,.3); }
+        .modal-body { padding: 20px; }
+        .detail-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid var(--border-dim);
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-key { font-size: 12px; color: var(--text-3); font-weight: 500; }
+        .detail-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-0); text-align: right; }
+
+        /* ─── DB Banner ─── */
+        .db-banner {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 8px;
+            margin-bottom: 20px; font-size: 12px;
+        }
+        .db-banner-icon { font-size: 20px; }
+        .db-banner-text { color: var(--text-2); }
+        .db-banner-text strong { color: var(--text-0); }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center; padding: 20px; font-size: 11px; color: var(--text-3);
+            border-top: 1px solid var(--border-dim); font-family: var(--mono); letter-spacing: .5px;
+        }
+
+        /* ─── Empty ─── */
+        .empty { padding: 48px 20px; text-align: center; }
+        .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: .6; }
+        .empty-text { font-size: 14px; color: var(--text-3); }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1200px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) {
+            .shell { padding: 12px; }
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .net-grid { grid-template-columns: 1fr; }
+            th, td { padding: 8px 10px; font-size: 11px; }
+            .topbar { padding: 0 12px; }
+            .brand { font-size: 14px; letter-spacing: 2px; }
+            .chip { font-size: 8px; padding: 2px 6px; }
+        }
+
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+        .fade-in { animation: fadeIn .3s ease-out; }
+
+        /* ─── Form Elements ─── */
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
+        .form-input {
+            font-family: var(--mono); font-size: 13px; padding: 8px 12px; border-radius: 6px;
+            border: 1px solid var(--border); background: var(--bg-0); color: var(--text-0);
+            outline: none; transition: border-color .15s;
+        }
+        .form-input:focus { border-color: var(--blue); }
+        .form-input::placeholder { color: var(--text-3); }
+        select.form-input { cursor: pointer; }
+        .form-check {
+            font-size: 12px; color: var(--text-2); display: inline-flex; align-items: center; gap: 6px;
+            cursor: pointer; font-family: var(--mono);
+        }
+        .form-check input[type="checkbox"] { accent-color: var(--blue); width: 14px; height: 14px; }
+
+        /* ─── Action Buttons in Table ─── */
+        .row-actions { display: flex; gap: 4px; justify-content: center; }
+        .row-btn {
+            width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--border-dim);
+            background: var(--bg-2); color: var(--text-3); cursor: pointer; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; transition: all .15s;
+        }
+        .row-btn:hover { border-color: var(--border); color: var(--text-1); }
+        .row-btn.btn-toggle-off:hover { background: var(--green-bg); color: var(--green); border-color: rgba(16,185,129,.3); }
+        .row-btn.btn-toggle-on:hover { background: var(--red-bg); color: var(--red); border-color: rgba(239,68,68,.3); }
+        .row-btn.btn-delete:hover { background: var(--red-bg); color: var(--red); border-color: rgba(239,68,68,.3); }
+        .row-btn.btn-edit:hover { background: var(--blue-bg); color: var(--blue); border-color: rgba(59,130,246,.3); }
+
+        /* ─── Toast ─── */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 300; padding: 12px 20px;
+            border-radius: 8px; font-family: var(--mono); font-size: 12px; font-weight: 600;
+            animation: toastIn .3s ease-out; max-width: 400px;
+        }
+        .toast-success { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.3); }
+        .toast-error { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
+        @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    </style>
+</head>
+<body>
+
+<!-- ─── Topbar ─── -->
+<div class="topbar">
+    <div class="topbar-left">
+        <span class="brand">DECO31416</span>
+        <span class="chip chip-service">asset-registry</span>
+        <span class="chip chip-version">v1.0.1</span>
+        <span class="chip chip-env">development</span>
+        <span class="conn-chip conn-checking" id="connChip"><span class="conn-dot"></span> checking...</span>
+    </div>
+    <div class="topbar-right">
+        <span class="topbar-time" id="clock"></span>
+        <span class="pulse" id="pulseIndicator"></span>
+    </div>
+</div>
+
+<!-- ─── Shell ─── -->
+<div class="shell">
+
+    <!-- Actions -->
+    <div class="actions">
+        <a class="act-btn" href="/api/v1/health" target="_blank">💊 Health</a>
+        <a class="act-btn" href="/api/v1/catalog" target="_blank">📦 Full Catalog (JSON)</a>
+        <a class="act-btn" href="/api/v1/assets" target="_blank">💰 All Assets (JSON)</a>
+        <a class="act-btn" href="/api/v1/networks" target="_blank">🌐 All Networks (JSON)</a>
+        <button class="act-btn primary" onclick="fetchAll()">⟳ Refresh</button>
+        <button class="act-btn" style="background:var(--green-bg);border-color:rgba(16,185,129,.3);color:var(--green)" onclick="openAddAsset('crypto')">➕ Add Crypto</button>
+        <button class="act-btn" style="background:var(--blue-bg);border-color:rgba(59,130,246,.3);color:var(--blue)" onclick="openAddAsset('fiat')">➕ Add Fiat</button>
+        <button class="act-btn" style="background:var(--purple-bg);border-color:rgba(167,139,250,.3);color:var(--purple)" onclick="openAddNetwork()">➕ Add Network</button>
+        <a class="act-btn orange" href="http://localhost:3013/api/v1/dashboard" target="_blank">📊 Aggregator Dashboard</a>
+    </div>
+
+    <!-- DB Banner -->
+    <div class="db-banner">
+        <span class="db-banner-icon">🗄️</span>
+        <span class="db-banner-text">
+            <strong>MongoDB</strong> · <span id="dbUri" style="font-family:var(--mono);font-size:11px;color:var(--text-3)">local</span>
+            <span style="margin-left:12px;color:var(--text-3)">|</span>
+            <span style="margin-left:12px" id="dbCollections" class="mono-sm">loading...</span>
+        </span>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-strip">
+        <div class="kpi kpi-orange">
+            <div class="kpi-label">Total Assets</div>
+            <div class="kpi-value" id="kpiTotal">—</div>
+            <div class="kpi-sub" id="kpiTotalSub"></div>
+        </div>
+        <div class="kpi kpi-amber">
+            <div class="kpi-label">Crypto</div>
+            <div class="kpi-value" id="kpiCrypto">—</div>
+            <div class="kpi-sub" style="color:var(--amber)">assets</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Fiat</div>
+            <div class="kpi-value" id="kpiFiat">—</div>
+            <div class="kpi-sub" style="color:var(--blue)">currencies</div>
+        </div>
+        <div class="kpi kpi-cyan">
+            <div class="kpi-label">Networks</div>
+            <div class="kpi-value" id="kpiNetworks">—</div>
+            <div class="kpi-sub" id="kpiNetworksSub"></div>
+        </div>
+        <div class="kpi kpi-green">
+            <div class="kpi-label">Enabled</div>
+            <div class="kpi-value" id="kpiEnabled">—</div>
+            <div class="kpi-sub" style="color:var(--green)">active</div>
+        </div>
+        <div class="kpi kpi-purple">
+            <div class="kpi-label">KYC Required</div>
+            <div class="kpi-value" id="kpiKyc">—</div>
+            <div class="kpi-sub" style="color:var(--purple)">assets</div>
+        </div>
+    </div>
+
+    <!-- ─── Assets Table ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--amber)"></span> Asset Catalog — Crypto &amp; Fiat</div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all" onclick="filterAssets('all',this)">ALL</button>
+                    <button class="filter-tab" data-filter="crypto" onclick="filterAssets('crypto',this)">CRYPTO</button>
+                    <button class="filter-tab" data-filter="stablecoin" onclick="filterAssets('stablecoin',this)">STABLECOIN</button>
+                    <button class="filter-tab" data-filter="fiat" onclick="filterAssets('fiat',this)">FIAT</button>
+                    <button class="filter-tab" data-filter="launchpad" onclick="filterAssets('launchpad',this)">LAUNCHPAD</button>
+                </div>
+                <span class="topbar-time" id="assetCount"></span>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Type</th>
+                    <th style="text-align:center">Decimals</th>
+                    <th>Networks / Metadata</th>
+                    <th style="text-align:center">KYC</th>
+                    <th style="text-align:center">Level</th>
+                    <th style="text-align:right">Min Amount</th>
+                    <th style="text-align:right">Max Amount</th>
+                    <th style="text-align:center">Status</th>
+                    <th style="text-align:center">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="assetBody">
+                <tr><td colspan="10"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ─── Networks Grid ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--purple)"></span> Network Registry — Blockchains &amp; Fiat Rails</div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-nfilter="all" onclick="filterNets('all',this)">ALL</button>
+                <button class="filter-tab" data-nfilter="BLOCKCHAIN" onclick="filterNets('BLOCKCHAIN',this)">BLOCKCHAIN</button>
+                <button class="filter-tab" data-nfilter="RAIL_FIAT" onclick="filterNets('RAIL_FIAT',this)">FIAT RAILS</button>
+            </div>
+        </div>
+        <div class="net-grid" id="netGrid">
+            <div class="empty" style="grid-column:1/-1"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div>
+        </div>
+    </div>
+
+    <!-- ─── Asset ↔ Network Matrix ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span> Asset ↔ Network Matrix</div>
+            <span class="topbar-time" id="matrixInfo"></span>
+        </div>
+        <div style="overflow-x:auto">
+            <table id="matrixTable">
+                <thead id="matrixHead"></thead>
+                <tbody id="matrixBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Detail Modal ─── -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-head">
+            <div class="modal-title" id="modalTitle">—</div>
+            <button class="modal-close" onclick="closeDetail()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<!-- ─── Add Asset Modal ─── -->
+<div class="modal-backdrop" id="addAssetBackdrop" onclick="if(event.target===this)closeAddAsset()">
+    <div class="modal" style="width:620px" onclick="event.stopPropagation()">
+        <div class="modal-head">
+            <div class="modal-title" id="addAssetTitle">➕ Add Crypto Asset</div>
+            <button class="modal-close" onclick="closeAddAsset()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="addAssetForm" onsubmit="submitAsset(event)">
+                <input type="hidden" id="aa_type" value="crypto">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div class="form-group">
+                        <label class="form-label">Code *</label>
+                        <input class="form-input" id="aa_code" placeholder="BTC, USDT, COP..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input class="form-input" id="aa_name" placeholder="Bitcoin, Tether..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Decimals *</label>
+                        <input class="form-input" id="aa_decimals" type="number" min="0" max="18" value="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Level</label>
+                        <select class="form-input" id="aa_level">
+                            <option value="BASIC">BASIC</option>
+                            <option value="VERIFIED">VERIFIED</option>
+                            <option value="ADVANCED">ADVANCED</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input" id="aa_category">
+                            <option value="CRYPTO">CRYPTO</option>
+                            <option value="STABLECOIN">STABLECOIN</option>
+                            <option value="LAUNCHPAD">LAUNCHPAD</option>
+                            <option value="FIAT">FIAT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Min Amount</label>
+                        <input class="form-input" id="aa_min" type="number" step="any" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Max Amount</label>
+                        <input class="form-input" id="aa_max" type="number" step="any" min="0" value="1000000">
+                    </div>
+                </div>
+                <div style="display:flex;gap:16px;margin:12px 0">
+                    <label class="form-check"><input type="checkbox" id="aa_enabled" checked> Enabled</label>
+                    <label class="form-check"><input type="checkbox" id="aa_kyc"> Requires KYC</label>
+                </div>
+
+                <!-- Crypto fields -->
+                <div id="cryptoFields">
+                    <div style="margin:12px 0 8px;font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px">Crypto Metadata</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                        <div class="form-group">
+                            <label class="form-label">Coin ID (CoinCap)</label>
+                            <input class="form-input" id="aa_coinId" placeholder="bitcoin, ethereum...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contract Address</label>
+                            <input class="form-input" id="aa_contract" placeholder="0x...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Networks (comma separated)</label>
+                        <input class="form-input" id="aa_networks" placeholder="ERC20, TRC20, BEP20...">
+                    </div>
+                </div>
+
+                <!-- Fiat fields -->
+                <div id="fiatFields" style="display:none">
+                    <div style="margin:12px 0 8px;font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px">Fiat Metadata</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+                        <div class="form-group">
+                            <label class="form-label">ISO Currency Code</label>
+                            <input class="form-input" id="aa_iso" placeholder="COP, USD...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Symbol</label>
+                            <input class="form-input" id="aa_symbol" placeholder="$, €, £...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Countries (comma)</label>
+                            <input class="form-input" id="aa_countries" placeholder="CO, US, MX...">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="addAssetMsg" style="margin:10px 0;font-size:12px;font-family:var(--mono);display:none"></div>
+                <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+                    <button type="button" class="act-btn" onclick="closeAddAsset()">Cancel</button>
+                    <button type="submit" class="act-btn primary" id="addAssetBtn">💾 Create Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Add Network Modal ─── -->
+<div class="modal-backdrop" id="addNetBackdrop" onclick="if(event.target===this)closeAddNetwork()">
+    <div class="modal" style="width:560px" onclick="event.stopPropagation()">
+        <div class="modal-head">
+            <div class="modal-title">➕ Add Network</div>
+            <button class="modal-close" onclick="closeAddNetwork()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="addNetForm" onsubmit="submitNetwork(event)">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div class="form-group">
+                        <label class="form-label">Code *</label>
+                        <input class="form-input" id="an_code" placeholder="ERC20, SPEI..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input class="form-input" id="an_name" placeholder="Ethereum ERC-20..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kind *</label>
+                        <select class="form-input" id="an_kind" required>
+                            <option value="BLOCKCHAIN">BLOCKCHAIN</option>
+                            <option value="RAIL_FIAT">RAIL_FIAT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Chain ID</label>
+                        <input class="form-input" id="an_chainId" type="number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirmations</label>
+                        <input class="form-input" id="an_confirm" type="number" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fee Type</label>
+                        <select class="form-input" id="an_feeType">
+                            <option value="FIXED">FIXED</option>
+                            <option value="PERCENTAGE">PERCENTAGE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fee Value</label>
+                        <input class="form-input" id="an_feeVal" type="number" step="any" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Min Withdrawal Fee</label>
+                        <input class="form-input" id="an_minFee" type="number" step="any" min="0" value="0">
+                    </div>
+                </div>
+                <div style="margin:12px 0">
+                    <label class="form-check"><input type="checkbox" id="an_enabled" checked> Enabled</label>
+                </div>
+                <div id="addNetMsg" style="margin:10px 0;font-size:12px;font-family:var(--mono);display:none"></div>
+                <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+                    <button type="button" class="act-btn" onclick="closeAddNetwork()">Cancel</button>
+                    <button type="submit" class="act-btn primary" id="addNetBtn">💾 Create Network</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Footer ─── -->
+<div class="footer">DECO31416 — ASSET REGISTRY — CATALOGO MAESTRO DE ACTIVOS Y REDES — PORT 3010</div>
+
+<script>
+const BASE = '/api/v1';
+
+/* ─── Icon CDNs ───────────────────────────────────────────── */
+const CRYPTO_CDN = 'https://assets.coincap.io/assets/icons';
+const FLAG_CDN   = 'https://flagcdn.com/w80';
+
+const FIAT_FLAGS = {
+    USD:'us', MXN:'mx', COP:'co', PEN:'pe', SVC:'sv', EUR:'eu',
+    GTQ:'gt', HNL:'hn', VES:'ve', BRL:'br', ARS:'ar', CLP:'cl',
+    GBP:'gb', CAD:'ca', JPY:'jp', CHF:'ch', AUD:'au', NZD:'nz',
+};
+
+const LP_COLORS = {
+    DECOX:'linear-gradient(135deg,#22d3ee,#3b82f6)',
+    DECO: 'linear-gradient(135deg,#10b981,#059669)',
+    DECO:'linear-gradient(135deg,#f59e0b,#f97316)',
+    GDUSD:'linear-gradient(135deg,#fbbf24,#d97706)',
+};
+
+const LAUNCHPAD_CODES = new Set(['DECOX','DECO','DECO','GDUSD']);
+
+/* ─── Icon builder ────────────────────────────────────────── */
+function assetIcon(code, type, size) {
+    size = size || 36;
+    code = (code || '').toUpperCase();
+    const s = `width:${size}px;height:${size}px;`;
+
+    if (type === 'crypto') {
+        if (LAUNCHPAD_CODES.has(code)) {
+            const bg = LP_COLORS[code] || 'linear-gradient(135deg,#a78bfa,#c4b5fd)';
+            return `<div class="fallback" style="${s}border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-size:${Math.round(size*0.3)}px;font-weight:700;font-family:var(--mono);color:#fff">${code.slice(0,4)}</div>`;
+        }
+        const lc = code.toLowerCase();
+        return `<img src="${CRYPTO_CDN}/${lc}@2x.png" style="${s}border-radius:50%;object-fit:cover"
+            onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'fallback fb-crypto\\' style=\\'${s}border-radius:50%\\'>${code.slice(0,4)}</div>'"
+            alt="${code}" loading="lazy">`;
+    }
+    if (type === 'fiat') {
+        const cc = FIAT_FLAGS[code];
+        if (cc) {
+            return `<img src="${FLAG_CDN}/${cc}.png" style="width:${size}px;height:${Math.round(size*0.68)}px;border-radius:3px;object-fit:cover"
+                onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'fallback fb-fiat\\' style=\\'${s}border-radius:50%\\'>${code}</div>'"
+                alt="${code}" loading="lazy">`;
+        }
+        return `<div class="fallback fb-fiat" style="${s}border-radius:50%">${code}</div>`;
+    }
+    return `<div class="fallback fb-crypto" style="${s}border-radius:50%">${code.slice(0,3)}</div>`;
+}
+
+/* ─── State ───────────────────────────────────────────────── */
+let allAssets = [], allNetworks = [];
+let currentFilter = 'all', currentNFilter = 'all';
+
+function $(id) { return document.getElementById(id); }
+
+/* ─── Connection chip ─────────────────────────────────────── */
+function updateConn(state) {
+    const c = $('connChip');
+    c.className = 'conn-chip conn-' + state;
+    const l = { connected:'connected', disconnected:'disconnected', checking:'checking...' };
+    c.innerHTML = `<span class="conn-dot"></span> ${l[state]}`;
+}
+
+/* ─── Clock ───────────────────────────────────────────────── */
+function tickClock() { $('clock').textContent = new Date().toLocaleTimeString() + ' · ' + new Date().toLocaleDateString(); }
+setInterval(tickClock, 1000); tickClock();
+
+/* ─── Internal API (with auth header) ─────────────────────── */
+let authToken = '';
+const INT = '/internal';
+
+function getAuthToken() {
+    if (!authToken) {
+        authToken = window.prompt('Enter INTERNAL_AUTH_TOKEN for this local instance') || '';
+    }
+    return authToken;
+}
+
+async function api(path) {
+    const r = await fetch(BASE + path);
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+}
+
+async function apiInternal(method, path, body) {
+    const opts = {
+        method,
+        headers: { 'Content-Type': 'application/json', 'x-internal-auth': getAuthToken() },
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(BASE + INT + path, opts);
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.message || r.status);
+    return data;
+}
+
+/* ─── Toast notifications ─────────────────────────────────── */
+function toast(msg, type = 'success') {
+    const d = document.createElement('div');
+    d.className = `toast toast-${type}`;
+    d.textContent = msg;
+    document.body.appendChild(d);
+    setTimeout(() => { d.style.opacity = '0'; d.style.transform = 'translateY(20px)'; setTimeout(() => d.remove(), 300); }, 3000);
+}
+
+/* ─── Format helpers ──────────────────────────────────────── */
+function fAmount(n) {
+    if (n == null) return '—';
+    if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return n.toLocaleString('en-US');
+    if (n >= 1) return n.toString();
+    if (n > 0) return n.toFixed(8).replace(/0+$/, '');
+    return '0';
+}
+
+/* ─── Determine asset subtype ─────────────────────────────── */
+function assetSubtype(asset) {
+    if (asset.type === 'fiat') return 'fiat';
+    if (LAUNCHPAD_CODES.has(asset.code)) return 'launchpad';
+    return 'crypto';
+}
+
+/* ─── Render Assets Table ─────────────────────────────────── */
+function renderAssets() {
+    const tb = $('assetBody');
+    if (!allAssets.length) {
+        tb.innerHTML = '<tr><td colspan="10"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No assets found</div></div></td></tr>';
+        return;
+    }
+    let filtered = allAssets;
+    if (currentFilter === 'crypto') filtered = allAssets.filter(a => a.category === 'CRYPTO' || (!a.category && a.type === 'crypto' && !LAUNCHPAD_CODES.has(a.code)));
+    else if (currentFilter === 'fiat') filtered = allAssets.filter(a => a.category === 'FIAT' || (!a.category && a.type === 'fiat' && a.code !== 'USD'));
+    else if (currentFilter === 'launchpad') filtered = allAssets.filter(a => a.category === 'LAUNCHPAD' || (!a.category && LAUNCHPAD_CODES.has(a.code)));
+    else if (currentFilter === 'stablecoin') filtered = allAssets.filter(a => a.category === 'STABLECOIN');
+
+    $('assetCount').textContent = `${filtered.length} / ${allAssets.length}`;
+
+    let html = '';
+    for (const a of filtered) {
+        const sub = assetSubtype(a);
+        const cat = a.category || (LAUNCHPAD_CODES.has(a.code) ? 'LAUNCHPAD' : a.type === 'fiat' ? 'FIAT' : 'CRYPTO');
+        const typePill = cat === 'LAUNCHPAD'
+            ? '<span class="pill" style="background:var(--purple-bg);color:var(--purple)">LAUNCHPAD</span>'
+            : cat === 'STABLECOIN'
+            ? '<span class="pill" style="background:rgba(16,185,129,0.12);color:#10b981">STABLECOIN</span>'
+            : cat === 'FIAT'
+            ? '<span class="pill pill-fiat">FIAT</span>'
+            : '<span class="pill pill-crypto">CRYPTO</span>';
+
+        const statusPill = a.enabled
+            ? '<span class="pill pill-enabled">ENABLED</span>'
+            : '<span class="pill pill-disabled">DISABLED</span>';
+
+        const kycPill = a.requiresKYC
+            ? '<span class="pill pill-kyc">YES</span>'
+            : '<span class="mono-sm" style="color:var(--text-3)">no</span>';
+
+        const levelPill = `<span class="mono-sm">${a.level || 'BASIC'}</span>`;
+
+        // networks / metadata column
+        let metaHtml = '';
+        if (a.type === 'crypto' && a.cryptoMetadata) {
+            metaHtml = (a.cryptoMetadata.networks || []).map(n =>
+                `<span class="pill-net">${n}</span>`
+            ).join('');
+            if (a.cryptoMetadata.contractAddress) {
+                metaHtml += `<div style="margin-top:3px;font-family:var(--mono);font-size:9px;color:var(--text-3)">${a.cryptoMetadata.contractAddress.slice(0,10)}…${a.cryptoMetadata.contractAddress.slice(-6)}</div>`;
+            }
+        } else if (a.type === 'fiat' && a.fiatMetadata) {
+            metaHtml = `<span class="mono-sm">${a.fiatMetadata.symbol}</span>`;
+            metaHtml += ` <span style="font-size:10px;color:var(--text-3)">${a.fiatMetadata.isoCurrencyCode} · ${(a.fiatMetadata.countries||[]).join(', ')}</span>`;
+        }
+
+        html += `<tr class="fade-in" style="cursor:pointer" onclick='showDetail(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
+            <td><div class="asset-cell">
+                <div class="asset-icon">${assetIcon(a.code, a.type, 36)}</div>
+                <div><div class="asset-name">${a.code}</div><div class="asset-full">${a.name}</div></div>
+            </div></td>
+            <td>${typePill}</td>
+            <td style="text-align:center"><span class="mono" style="font-size:15px;font-weight:700;color:var(--text-0)">${a.decimals}</span></td>
+            <td>${metaHtml}</td>
+            <td style="text-align:center">${kycPill}</td>
+            <td style="text-align:center">${levelPill}</td>
+            <td style="text-align:right"><span class="mono-sm">${fAmount(a.minAmount)}</span></td>
+            <td style="text-align:right"><span class="mono-sm">${fAmount(a.maxAmount)}</span></td>
+            <td style="text-align:center">${statusPill}</td>
+            <td><div class="row-actions">
+                <button class="row-btn ${a.enabled ? 'btn-toggle-on' : 'btn-toggle-off'}" title="${a.enabled ? 'Disable' : 'Enable'}" onclick="event.stopPropagation();toggleAsset('${a.code}',${a.enabled})">${a.enabled ? '⏸' : '▶'}</button>
+                <button class="row-btn btn-delete" title="Delete" onclick="event.stopPropagation();deleteAsset('${a.code}')">🗑</button>
+            </div></td>
+        </tr>`;
+    }
+    tb.innerHTML = html;
+}
+
+function filterAssets(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAssets();
+}
+
+/* ─── Render Networks Grid ────────────────────────────────── */
+function renderNetworks() {
+    const grid = $('netGrid');
+    if (!allNetworks.length) {
+        grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🌐</div><div class="empty-text">No networks</div></div>';
+        return;
+    }
+    let filtered = allNetworks;
+    if (currentNFilter !== 'all') filtered = allNetworks.filter(n => n.kind === currentNFilter);
+
+    let html = '';
+    for (const n of filtered) {
+        const cls = n.kind === 'BLOCKCHAIN' ? 'bc' : 'rf';
+        const kindPill = n.kind === 'BLOCKCHAIN'
+            ? '<span class="pill pill-blockchain">BLOCKCHAIN</span>'
+            : '<span class="pill pill-rail">RAIL FIAT</span>';
+        const statusPill = n.enabled
+            ? '<span class="pill pill-enabled">ON</span>'
+            : '<span class="pill pill-disabled">OFF</span>';
+
+        html += `<div class="net-card ${cls} fade-in">
+            <div class="net-card-head">
+                <span class="net-card-code">${n.code}</span>
+                <span style="display:flex;gap:4px">${kindPill} ${statusPill}</span>
+            </div>
+            <div class="net-card-name">${n.name}</div>
+            ${n.chainId != null ? `<div class="net-card-row"><span>Chain ID</span><span class="val">${n.chainId}</span></div>` : ''}
+            ${n.confirmations != null ? `<div class="net-card-row"><span>Confirmations</span><span class="val">${n.confirmations}</span></div>` : ''}
+            <div class="net-card-row"><span>Fee Type</span><span class="val">${n.withdrawalFeeType || 'FIXED'}</span></div>
+            <div class="net-card-row"><span>Fee Value</span><span class="val">${n.withdrawalFeeValue ?? 0}</span></div>
+            <div class="net-card-row"><span>Min Fee</span><span class="val">${n.minWithdrawalFee ?? 0}</span></div>
+            <div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">
+                <button class="row-btn ${n.enabled ? 'btn-toggle-on' : 'btn-toggle-off'}" title="${n.enabled ? 'Disable' : 'Enable'}" onclick="toggleNetwork('${n.code}',${n.enabled})">${n.enabled ? '⏸' : '▶'}</button>
+                <button class="row-btn btn-delete" title="Delete" onclick="deleteNetwork('${n.code}')">🗑</button>
+            </div>
+        </div>`;
+    }
+    grid.innerHTML = html;
+}
+
+function filterNets(f, btn) {
+    currentNFilter = f;
+    document.querySelectorAll('[data-nfilter]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderNetworks();
+}
+
+/* ─── Render Asset ↔ Network Matrix ───────────────────────── */
+function renderMatrix() {
+    const cryptoAssets = allAssets.filter(a => a.type === 'crypto' && a.cryptoMetadata?.networks?.length);
+    const blockchainNets = allNetworks.filter(n => n.kind === 'BLOCKCHAIN').sort((a, b) => a.code.localeCompare(b.code));
+
+    if (!cryptoAssets.length || !blockchainNets.length) {
+        $('matrixHead').innerHTML = '';
+        $('matrixBody').innerHTML = '<tr><td><div class="empty"><div class="empty-icon">🔀</div><div class="empty-text">No data</div></div></td></tr>';
+        return;
+    }
+
+    $('matrixInfo').textContent = `${cryptoAssets.length} assets × ${blockchainNets.length} networks`;
+
+    // Header
+    let headHtml = '<tr><th>Asset</th>';
+    for (const net of blockchainNets) {
+        headHtml += `<th style="text-align:center;font-size:9px">${net.code}</th>`;
+    }
+    headHtml += '</tr>';
+    $('matrixHead').innerHTML = headHtml;
+
+    // Body
+    let bodyHtml = '';
+    for (const a of cryptoAssets) {
+        const nets = new Set(a.cryptoMetadata.networks || []);
+        bodyHtml += '<tr>';
+        bodyHtml += `<td><div class="asset-cell">
+            <div class="asset-icon" style="width:24px;height:24px">${assetIcon(a.code, a.type, 24)}</div>
+            <span class="mono" style="font-weight:700;font-size:12px">${a.code}</span>
+        </div></td>`;
+        for (const net of blockchainNets) {
+            if (nets.has(net.code)) {
+                bodyHtml += '<td style="text-align:center"><span style="color:var(--green);font-size:16px">●</span></td>';
+            } else {
+                bodyHtml += '<td style="text-align:center"><span style="color:var(--text-3);font-size:10px;opacity:.3">—</span></td>';
+            }
+        }
+        bodyHtml += '</tr>';
+    }
+    $('matrixBody').innerHTML = bodyHtml;
+}
+
+/* ─── Detail Modal ────────────────────────────────────────── */
+function showDetail(asset) {
+    const a = typeof asset === 'string' ? JSON.parse(asset) : asset;
+    $('modalTitle').innerHTML = `<div class="asset-icon" style="width:28px;height:28px">${assetIcon(a.code, a.type, 28)}</div> ${a.code} — ${a.name}`;
+
+    let html = '';
+    const row = (k, v) => `<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`;
+
+    html += row('Code', a.code);
+    html += row('Name', a.name);
+    html += row('Type', a.type.toUpperCase());
+    html += row('Decimals', a.decimals);
+    html += row('Enabled', a.enabled ? '<span style="color:var(--green)">✓ YES</span>' : '<span style="color:var(--red)">✗ NO</span>');
+    html += row('Min Amount', fAmount(a.minAmount));
+    html += row('Max Amount', fAmount(a.maxAmount));
+    html += row('Requires KYC', a.requiresKYC ? '<span style="color:var(--orange)">YES</span>' : 'No');
+    html += row('KYC Level', a.level || 'BASIC');
+
+    if (a.type === 'crypto' && a.cryptoMetadata) {
+        html += '<div style="margin:16px 0 8px;font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px">Crypto Metadata</div>';
+        html += row('Coin ID', a.cryptoMetadata.coinId || '—');
+        if (a.cryptoMetadata.contractAddress) {
+            html += row('Contract', `<span style="font-size:10px;word-break:break-all">${a.cryptoMetadata.contractAddress}</span>`);
+        }
+        html += row('Networks', (a.cryptoMetadata.networks || []).map(n => `<span class="pill-net">${n}</span>`).join(' '));
+    }
+
+    if (a.type === 'fiat' && a.fiatMetadata) {
+        html += '<div style="margin:16px 0 8px;font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1px">Fiat Metadata</div>';
+        html += row('ISO Code', a.fiatMetadata.isoCurrencyCode || '—');
+        html += row('Symbol', a.fiatMetadata.symbol || '—');
+        html += row('Countries', (a.fiatMetadata.countries || []).join(', ') || '—');
+    }
+
+    if (a.createdAt) html += row('Created', new Date(a.createdAt).toLocaleString());
+    if (a.updatedAt) html += row('Updated', new Date(a.updatedAt).toLocaleString());
+    if (a._id) html += row('MongoDB _id', `<span style="font-size:10px">${a._id}</span>`);
+
+    $('modalBody').innerHTML = html;
+    $('modalBackdrop').classList.add('open');
+}
+
+function closeDetail() { $('modalBackdrop').classList.remove('open'); }
+function closeModal(e) { if (e.target === $('modalBackdrop')) closeDetail(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+/* ─── Update KPIs ─────────────────────────────────────────── */
+function updateKpis() {
+    const crypto = allAssets.filter(a => a.type === 'crypto');
+    const fiat = allAssets.filter(a => a.type === 'fiat');
+    const bc = allNetworks.filter(n => n.kind === 'BLOCKCHAIN');
+    const rf = allNetworks.filter(n => n.kind === 'RAIL_FIAT');
+    const enabled = allAssets.filter(a => a.enabled).length;
+    const kyc = allAssets.filter(a => a.requiresKYC).length;
+
+    $('kpiTotal').textContent = allAssets.length;
+    $('kpiTotalSub').textContent = `${crypto.length}C + ${fiat.length}F`;
+    $('kpiCrypto').textContent = crypto.length;
+    $('kpiFiat').textContent = fiat.length;
+    $('kpiNetworks').textContent = allNetworks.length;
+    $('kpiNetworksSub').textContent = `${bc.length} chain + ${rf.length} rails`;
+    $('kpiEnabled').textContent = enabled;
+    $('kpiKyc').textContent = kyc;
+    $('dbCollections').textContent = `assets: ${allAssets.length} · networks: ${allNetworks.length}`;
+}
+
+/* ─── CRUD: Toggle & Delete Assets ─────────────────────────── */
+async function toggleAsset(code, currentEnabled) {
+    try {
+        const action = currentEnabled ? 'disable' : 'enable';
+        await apiInternal('POST', `/assets/${code}/${action}`);
+        toast(`${code} ${action}d successfully`);
+        fetchAll();
+    } catch (e) { toast(`Error: ${e.message}`, 'error'); }
+}
+
+async function deleteAsset(code) {
+    if (!confirm(`¿Eliminar asset ${code}? Esta acción no se puede deshacer.`)) return;
+    try {
+        await apiInternal('DELETE', `/assets/${code}`);
+        toast(`${code} deleted`);
+        fetchAll();
+    } catch (e) { toast(`Error: ${e.message}`, 'error'); }
+}
+
+/* ─── CRUD: Toggle & Delete Networks ──────────────────────── */
+async function toggleNetwork(code, currentEnabled) {
+    try {
+        const action = currentEnabled ? 'disable' : 'enable';
+        await apiInternal('POST', `/networks/${code}/${action}`);
+        toast(`Network ${code} ${action}d`);
+        fetchAll();
+    } catch (e) { toast(`Error: ${e.message}`, 'error'); }
+}
+
+async function deleteNetwork(code) {
+    if (!confirm(`¿Eliminar network ${code}?`)) return;
+    try {
+        await apiInternal('DELETE', `/networks/${code}`);
+        toast(`Network ${code} deleted`);
+        fetchAll();
+    } catch (e) { toast(`Error: ${e.message}`, 'error'); }
+}
+
+/* ─── Add Asset Modal ─────────────────────────────────────── */
+function openAddAsset(type) {
+    $('aa_type').value = type;
+    $('addAssetTitle').textContent = type === 'crypto' ? '➕ Add Crypto Asset' : '➕ Add Fiat Currency';
+    $('cryptoFields').style.display = type === 'crypto' ? 'block' : 'none';
+    $('fiatFields').style.display = type === 'fiat' ? 'block' : 'none';
+    $('aa_decimals').value = type === 'crypto' ? 8 : 2;
+    $('addAssetForm').reset();
+    $('aa_enabled').checked = true;
+    $('aa_decimals').value = type === 'crypto' ? 8 : 2;
+    $('aa_category').value = type === 'crypto' ? 'CRYPTO' : 'FIAT';
+    $('addAssetMsg').style.display = 'none';
+    $('addAssetBackdrop').classList.add('open');
+}
+
+function closeAddAsset() { $('addAssetBackdrop').classList.remove('open'); }
+
+async function submitAsset(e) {
+    e.preventDefault();
+    const type = $('aa_type').value;
+    const code = $('aa_code').value.trim().toUpperCase();
+    const name = $('aa_name').value.trim();
+    const decimals = parseInt($('aa_decimals').value);
+
+    const body = {
+        code, name, type, decimals,
+        category: $('aa_category').value,
+        enabled: $('aa_enabled').checked,
+        requiresKYC: $('aa_kyc').checked,
+        level: $('aa_level').value,
+        minAmount: parseFloat($('aa_min').value) || 0,
+        maxAmount: parseFloat($('aa_max').value) || 1000000,
+    };
+
+    if (type === 'crypto') {
+        const coinId = $('aa_coinId').value.trim();
+        const contract = $('aa_contract').value.trim();
+        const networks = $('aa_networks').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+        body.cryptoMetadata = { coinId: coinId || code.toLowerCase(), networks };
+        if (contract) body.cryptoMetadata.contractAddress = contract;
+    } else {
+        const iso = $('aa_iso').value.trim().toUpperCase();
+        const symbol = $('aa_symbol').value.trim();
+        const countries = $('aa_countries').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+        body.fiatMetadata = { isoCurrencyCode: iso || code, symbol: symbol || '$', countries };
+    }
+
+    const btn = $('addAssetBtn');
+    btn.disabled = true; btn.textContent = '⏳ Creating...';
+    const msg = $('addAssetMsg');
+
+    try {
+        await apiInternal('POST', '/assets', body);
+        msg.style.display = 'block'; msg.style.color = 'var(--green)';
+        msg.textContent = `✓ ${code} created successfully`;
+        toast(`Asset ${code} created!`);
+        setTimeout(() => { closeAddAsset(); fetchAll(); }, 800);
+    } catch (err) {
+        msg.style.display = 'block'; msg.style.color = 'var(--red)';
+        msg.textContent = `✗ ${err.message}`;
+        toast(`Error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = '💾 Create Asset';
+    }
+}
+
+/* ─── Add Network Modal ───────────────────────────────────── */
+function openAddNetwork() {
+    $('addNetForm').reset();
+    $('an_enabled').checked = true;
+    $('addNetMsg').style.display = 'none';
+    $('addNetBackdrop').classList.add('open');
+}
+
+function closeAddNetwork() { $('addNetBackdrop').classList.remove('open'); }
+
+async function submitNetwork(e) {
+    e.preventDefault();
+    const body = {
+        code: $('an_code').value.trim().toUpperCase(),
+        name: $('an_name').value.trim(),
+        kind: $('an_kind').value,
+        enabled: $('an_enabled').checked,
+        withdrawalFeeType: $('an_feeType').value,
+        withdrawalFeeValue: parseFloat($('an_feeVal').value) || 0,
+        minWithdrawalFee: parseFloat($('an_minFee').value) || 0,
+    };
+    const chainId = $('an_chainId').value;
+    const confirm_ = $('an_confirm').value;
+    if (chainId) body.chainId = parseInt(chainId);
+    if (confirm_) body.confirmations = parseInt(confirm_);
+
+    const btn = $('addNetBtn');
+    btn.disabled = true; btn.textContent = '⏳ Creating...';
+    const msg = $('addNetMsg');
+
+    try {
+        await apiInternal('POST', '/networks', body);
+        msg.style.display = 'block'; msg.style.color = 'var(--green)';
+        msg.textContent = `✓ ${body.code} created`;
+        toast(`Network ${body.code} created!`);
+        setTimeout(() => { closeAddNetwork(); fetchAll(); }, 800);
+    } catch (err) {
+        msg.style.display = 'block'; msg.style.color = 'var(--red)';
+        msg.textContent = `✗ ${err.message}`;
+        toast(`Error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = '💾 Create Network';
+    }
+}
+
+/* ─── Keyboard shortcuts for modals ───────────────────────── */
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        closeAddAsset();
+        closeAddNetwork();
+    }
+});
+
+/* ─── Master Fetch ────────────────────────────────────────── */
+async function fetchAll() {
+    try {
+        const catalog = await api('/catalog');
+        allAssets = [...(catalog.crypto || []), ...(catalog.fiat || [])];
+        // sort: crypto first by code, then fiat by code
+        allAssets.sort((a, b) => {
+            if (a.type !== b.type) return a.type === 'crypto' ? -1 : 1;
+            return a.code.localeCompare(b.code);
+        });
+        allNetworks = catalog.networks || [];
+        allNetworks.sort((a, b) => a.code.localeCompare(b.code));
+
+        updateKpis();
+        renderAssets();
+        renderNetworks();
+        renderMatrix();
+        updateConn('connected');
+        $('pulseIndicator').style.background = 'var(--green)';
+        $('dbUri').textContent = 'localhost:27017/deco_asset_registry';
+    } catch (e) {
+        console.error('Fetch error:', e);
+        updateConn('disconnected');
+        $('pulseIndicator').style.background = 'var(--red)';
+    }
+}
+
+/* ─── Init ────────────────────────────────────────────────── */
+fetchAll();
+setInterval(fetchAll, 30000);
+</script>
+</body>
+</html>

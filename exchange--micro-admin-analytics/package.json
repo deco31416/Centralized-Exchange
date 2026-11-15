@@ -1,0 +1,26 @@
+{
+  "name": "exchange-micro-admin-analytics",
+  "version": "0.1.1",
+  "description": "Administrative analytics microservice for DECO EXCHANGE.",
+  "packageManager": "yarn@4.12.0",
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.18",
+    "@nestjs/config": "^4.0.3",
+    "@nestjs/core": "^11.1.18",
+    "@nestjs/platform-express": "^11.1.18",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.7",
+    "@types/node": "^22.15.18",
+    "typescript": "^6.0.2"
+  }
+}

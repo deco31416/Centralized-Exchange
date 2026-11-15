@@ -1,0 +1,422 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .legal-document-shell {
+    @apply min-h-screen bg-background text-foreground;
+  }
+
+  .legal-document-container {
+    @apply container pb-16 pt-28 md:pt-32;
+  }
+
+  .legal-document-hero {
+    @apply relative flex flex-col items-center overflow-hidden rounded-[var(--radius)] border border-border px-5 py-14 text-center shadow-[0_24px_80px_rgba(15,23,42,0.10)] sm:px-8 md:py-16;
+    background:
+      linear-gradient(rgba(15, 23, 42, 0.085) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.085) 1px, transparent 1px),
+      radial-gradient(circle at 50% 0%, rgba(148, 163, 184, 0.20), rgba(226, 232, 240, 0.45) 28%, transparent 56%),
+      linear-gradient(180deg, #ffffff 0%, hsl(var(--background)) 68%);
+    background-size: 92px 92px, 92px 92px, auto, auto;
+  }
+
+  .dark .legal-document-hero {
+    @apply shadow-none;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.085) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.085) 1px, transparent 1px),
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04) 28%, transparent 52%),
+      linear-gradient(180deg, #050505 0%, #000000 68%);
+    background-size: 92px 92px, 92px 92px, auto, auto;
+  }
+
+  .legal-document-eyebrow {
+    @apply order-2 mt-3 text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl xl:text-7xl;
+  }
+
+  .legal-document-title {
+    @apply order-1 text-sm font-semibold uppercase tracking-[0.16em] text-[#ff6c02];
+  }
+
+  .legal-document-meta {
+    @apply order-3 mt-6 inline-flex rounded-full border border-foreground bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-sm ring-1 ring-foreground/10 dark:border-white dark:bg-white dark:text-black dark:ring-white/10;
+  }
+}
+
+/* Estilos base y variables */
+@layer base {
+  :root {
+    --background: 0 0% 98.5%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 25 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 39 100% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 210 100% 60%;
+    --info-foreground: 0 0% 98%;
+    --border: 0 0% 84%;
+    --input: 0 0% 82%;
+    --ring: 25 100% 50%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 1.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 25 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --scrollbar-size: 10px;
+    --scrollbar-compact-size: 6px;
+    --scrollbar-thumb: rgba(15, 23, 42, 0.22);
+    --scrollbar-thumb-hover: rgba(15, 23, 42, 0.36);
+    --scrollbar-track: transparent;
+    --scrollbar-corner: transparent;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 25 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 39 100% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 210 100% 60%;
+    --info-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 25 100% 50%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 25 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.32);
+    --scrollbar-track: transparent;
+    --scrollbar-corner: transparent;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    width: 100%;
+    background: hsl(var(--background));
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    min-height: 44px;
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background: var(--scrollbar-thumb);
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: var(--scrollbar-corner);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", "Inter", Arial, Helvetica, sans-serif;
+  }
+
+  p,
+  li,
+  input,
+  textarea,
+  select,
+  button {
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+  }
+}
+
+/* Estilos extra: animaciones, gráficos, scrollbar */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Scrollbar fino para scroll interno del mockup de teléfono */
+  .mock-wallet-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  .mock-wallet-scroll::-webkit-scrollbar {
+    width: var(--scrollbar-compact-size);
+    height: var(--scrollbar-compact-size);
+  }
+
+  .mock-wallet-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  .mock-wallet-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background: var(--scrollbar-thumb);
+    background-clip: padding-box;
+  }
+
+  .mock-wallet-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+
+  /* Scrollbar para modales con contenido desplazable (modal-scroll) */
+  /* Scrollbar para dropdowns de selección de activos */
+  .dropdown-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  .dropdown-scroll::-webkit-scrollbar {
+    width: var(--scrollbar-compact-size);
+    height: var(--scrollbar-compact-size);
+  }
+
+  .dropdown-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  .dropdown-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background: var(--scrollbar-thumb);
+    background-clip: padding-box;
+  }
+
+  .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+
+  .modal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  .modal-scroll::-webkit-scrollbar {
+    width: var(--scrollbar-compact-size);
+    height: var(--scrollbar-compact-size);
+  }
+
+  .modal-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    margin: 8px 0;
+  }
+
+  .modal-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background: var(--scrollbar-thumb);
+    background-clip: padding-box;
+    transition: background 0.2s;
+  }
+
+  .modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(
+      to right,
+      rgba(240, 185, 11, 0.1),
+      rgba(240, 185, 11, 0.05),
+      rgba(240, 185, 11, 0)
+    );
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulseSlow 2s infinite;
+  }
+
+  .hover-scale {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
+  /* Gráficos actualizados para usar currentColor */
+  .chart-line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .chart-dot {
+    fill: currentColor;
+    stroke: hsl(var(--background));
+    stroke-width: 2;
+  }
+
+  .chart-area {
+    fill: url(#gradient);
+    opacity: 0.2;
+  }
+
+  .chart-bar {
+    fill: currentColor;
+    rx: 4;
+  }
+
+  .chart-grid {
+    stroke: hsl(var(--border));
+    stroke-dasharray: 4;
+  }
+}
+
+/* Keyframes globales */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* =============================================================
+   SCROLLBAR LOCK OVERRIDE
+   Debe estar fuera de @layer para tener prioridad sobre estilos
+   inyectados en runtime por react-remove-scroll-bar.
+   react-remove-scroll-bar inyecta:
+     body[data-scroll-locked] { overflow: hidden !important; margin-right: Xpx !important }
+   Solo toca `body`, nunca `html`.
+   Con overflow-y: scroll en html, el scrollbar vive en html
+   y no es afectado por overflow: hidden en body.
+   ============================================================= */
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+/* Especificidad (0,1,2) > (0,1,1) de react-remove-scroll-bar.
+   Gana en !important cuando ambas son unlayered author CSS. */
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}

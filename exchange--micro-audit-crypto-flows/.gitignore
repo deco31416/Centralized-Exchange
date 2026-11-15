@@ -1,0 +1,124 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# Compiled output
+/bin
+/dist
+/build
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+.env.local
+# Repo hygiene
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+.cache/
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Deco Exchange: local secrets and generated artifacts
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
+!.env.sample
+!.env.*.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*.log
+*.dump
+*.sql.gz
+*.sqlite
+*.db
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+.pnp.*
+credentials/
+*.asc
+*.gpg
+.git-credentials
+*.firebase-adminsdk*.json
+*google-credentials*.json
+*service-account*.json
+.npmrc
+.pypirc
+.netrc
+.aws/credentials
+**/.aws/credentials
+.docker/config.json
+**/.docker/config.json

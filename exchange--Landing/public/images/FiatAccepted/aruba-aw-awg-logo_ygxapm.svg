@@ -1,0 +1,22 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6515_1278)">
+<rect width="1200" height="1200" fill="black"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 0V1200H1200V0H0Z" fill="#5BA3DA"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 0V1200H1200V0H0Z" fill="#5BA3DA"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M285.55 403.107L165 365.898L288.227 329.433L318.31 213L353.041 332.99L467 364.656L352.704 400.331L318.593 515L285.55 403.107Z" fill="#EF2929"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M285.55 403.107L165 365.898L288.227 329.433L318.31 213L353.041 332.99L467 364.656L352.704 400.331L318.593 515L285.55 403.107Z" fill="#FF0000"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M285.55 403.107L165 365.898L288.227 329.433L318.31 213L353.041 332.99L467 364.656L352.704 400.331L318.593 515L285.55 403.107Z" stroke="white" stroke-width="10"/>
+<path d="M1200.01 1000.01H0.00585938V900.004H1200.01V1000.01ZM1200.01 800.006H0.00585938V700H1200.01V800.006Z" fill="#FAD615"/>
+</g>
+<rect width="1200" height="1200" rx="600" fill="url(#paint0_linear_6515_1278)" style="mix-blend-mode:overlay"/>
+<rect x="20" y="20" width="1160" height="1160" rx="580" stroke="black" stroke-opacity="0.1" stroke-width="40"/>
+<defs>
+<linearGradient id="paint0_linear_6515_1278" x1="600" y1="0" x2="600" y2="1200" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.7"/>
+<stop offset="1" stop-opacity="0.3"/>
+</linearGradient>
+<clipPath id="clip0_6515_1278">
+<rect width="1200" height="1200" rx="600" fill="white"/>
+</clipPath>
+</defs>
+</svg>

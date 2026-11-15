@@ -1,0 +1,33 @@
+{
+    "name": "micro-withdrawal-orchestrator",
+    "version": "0.0.3",
+    "scripts": {
+        "build": "nest build",
+        "start": "nest start",
+        "start:dev": "nest start --watch",
+        "start:debug": "nest start --debug --watch",
+        "start:prod": "node dist/main"
+    },
+    "dependencies": {
+        "@nestjs/axios": "^3.0.0",
+        "@nestjs/common": "^10.0.0",
+        "@nestjs/config": "^3.0.0",
+        "@nestjs/core": "^10.0.0",
+        "@nestjs/mongoose": "^10.0.0",
+        "@nestjs/platform-express": "^10.0.0",
+        "@nestjs/swagger": "^11.4.2",
+        "axios": "^1.0.0",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.15.1",
+        "mongoose": "^8.0.0",
+        "reflect-metadata": "^0.2.0",
+        "rxjs": "^7.0.0",
+        "swagger-ui-express": "^5.0.1",
+        "uuid": "^9.0.0"
+    },
+    "devDependencies": {
+        "@nestjs/cli": "^10.0.0",
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    }
+}

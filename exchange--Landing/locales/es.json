@@ -1,0 +1,128 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "yes": "Sí",
+    "no": "No",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "verified": "Verificado",
+    "amount": "Monto",
+    "price": "Precio",
+    "total": "Total",
+    "status": "Estado",
+    "actions": "Acciones",
+    "date": "Fecha",
+    "type": "Tipo",
+    "back": "Volver",
+    "next": "Siguiente",
+    "close": "Cerrar",
+    "send": "Enviar",
+    "buy": "Comprar",
+    "sell": "Vender"
+  },
+  "empty": {
+    "title": "No hay datos disponibles",
+    "description": "Aún no hay información para mostrar.",
+    "noOffers": "No hay ofertas disponibles en este momento.",
+    "noOrders": "No tienes órdenes todavía.",
+    "noAds": "No tienes anuncios publicados.",
+    "noChats": "No tienes conversaciones todavía.",
+    "noUsers": "No se encontraron usuarios.",
+    "noMessages": "Aún no hay mensajes en este chat.",
+    "backendPending": "Esta sección se activará cuando el backend P2P esté disponible."
+  },
+  "p2p": {
+    "nav": {
+      "dashboard": "Inicio",
+      "market": "Mercado",
+      "exchange": "Convertir",
+      "myAds": "Mis anuncios",
+      "orders": "Órdenes",
+      "chat": "Chat",
+      "users": "Usuarios",
+      "settings": "Ajustes"
+    },
+    "market": {
+      "title": "Mercado P2P",
+      "subtitle": "Compra y vende criptomonedas con otros usuarios",
+      "tabBuy": "Comprar",
+      "tabSell": "Vender",
+      "advertiser": "Anunciante",
+      "limitsAvailable": "Límites / Disponible",
+      "payment": "Pago",
+      "trade": "Operar",
+      "completion": "completitud",
+      "ordersCount": "órdenes",
+      "minutes": "min",
+      "filterAmount": "Monto",
+      "filterMethod": "Método de pago",
+      "filterCurrency": "Moneda fiat",
+      "verifiedOnly": "Solo verificados",
+      "onlineOnly": "Solo en línea",
+      "noOffers": "No hay ofertas para los filtros seleccionados.",
+      "buyButton": "Comprar {crypto}",
+      "sellButton": "Vender {crypto}"
+    },
+    "exchange": {
+      "title": "Convertir",
+      "subtitle": "Cambia de fiat a cripto, cripto a cripto o fiat a fiat",
+      "fromLabel": "De",
+      "toLabel": "A",
+      "rate": "Tasa",
+      "fee": "Comisión",
+      "selectPaymentMethod": "Selecciona método de pago",
+      "confirm": "Confirmar conversión"
+    },
+    "orders": {
+      "title": "Órdenes",
+      "subtitle": "Historial de tus operaciones P2P",
+      "filterStatus": "Estado",
+      "filterType": "Tipo",
+      "filterDate": "Rango de fechas",
+      "statusCompleted": "Completada",
+      "statusProcessing": "En proceso",
+      "statusCancelled": "Cancelada",
+      "statusDisputed": "En disputa",
+      "viewDetails": "Ver detalles"
+    },
+    "myAds": {
+      "title": "Mis anuncios",
+      "subtitle": "Gestiona tus anuncios de compra y venta",
+      "newAd": "Nuevo anuncio",
+      "togglePublish": "Publicar / Pausar",
+      "noAds": "No tienes anuncios publicados todavía."
+    },
+    "chat": {
+      "title": "Chat",
+      "subtitle": "Conversaciones con otros usuarios",
+      "placeholder": "Escribe un mensaje...",
+      "send": "Enviar",
+      "selectChat": "Selecciona una conversación para empezar",
+      "noChats": "Aún no tienes conversaciones."
+    },
+    "users": {
+      "title": "Usuarios P2P",
+      "subtitle": "Comerciantes verificados de la red",
+      "filterRole": "Rol",
+      "viewProfile": "Ver perfil"
+    },
+    "settings": {
+      "title": "Ajustes",
+      "subtitle": "Configuración de tu cuenta P2P",
+      "tabProfile": "Perfil",
+      "tabAccount": "Cuenta",
+      "tabPayment": "Pagos",
+      "tabNotifications": "Notificaciones"
+    }
+  }
+}

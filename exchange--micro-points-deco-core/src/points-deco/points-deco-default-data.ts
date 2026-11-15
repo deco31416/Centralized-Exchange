@@ -1,0 +1,38 @@
+import { PointService, PointType } from './points-deco.interfaces';
+
+export const defaultDecoPoints = [
+  {
+    id: 'point-demo-bogota-commerce',
+    type: 'commerce' as PointType,
+    legalName: 'Punto Deco Demo Bogota SAS',
+    tradeName: 'Punto Deco Chapinero',
+    country: 'CO',
+    region: 'Cundinamarca',
+    city: 'Bogota',
+    zone: 'Chapinero',
+    status: 'active',
+    riskLevel: 'green',
+    kybLevel: 'commerce',
+    allowedServices: ['cash_in', 'cash_out', 'remittance'] as PointService[],
+    liquidityRangeLabel: 'Hasta 500.000 COP',
+    scheduleLabel: 'Lun-Vie 9:00 AM - 6:00 PM',
+    rating: 4.8,
+  },
+  {
+    id: 'point-demo-medellin-cashier',
+    type: 'cashier' as PointType,
+    legalName: 'Cajero Deco Demo Medellin',
+    tradeName: 'Cajero Deco Laureles',
+    country: 'CO',
+    region: 'Antioquia',
+    city: 'Medellin',
+    zone: 'Laureles',
+    status: 'active',
+    riskLevel: 'green',
+    kybLevel: 'cashier',
+    allowedServices: ['cash_in', 'cash_out'] as PointService[],
+    liquidityRangeLabel: 'Hasta 200.000 COP',
+    scheduleLabel: 'Lun-Sab 10:00 AM - 5:00 PM',
+    rating: 4.6,
+  },
+];

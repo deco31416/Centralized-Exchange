@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECO Exchange — micro-pricing-fiat v3.1.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #05070a;
+            --bg-1: #0a0e14;
+            --bg-2: #111827;
+            --bg-3: #1a2236;
+            --bg-hover: #1e293b;
+            --border: #1e293b;
+            --border-dim: #151d2e;
+            --text-0: #f8fafc;
+            --text-1: #e2e8f0;
+            --text-2: #94a3b8;
+            --text-3: #64748b;
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --purple: #a78bfa;
+            --green-bg: rgba(16,185,129,.08);
+            --red-bg: rgba(239,68,68,.08);
+            --blue-bg: rgba(59,130,246,.08);
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: var(--sans); background: var(--bg-0); color: var(--text-1); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+        /* ─── Topbar ─── */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 52px;
+            background: rgba(5,7,10,.85); backdrop-filter: blur(12px) saturate(1.4);
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 14px; }
+        .brand {
+            font-family: var(--mono); font-weight: 800; font-size: 18px; letter-spacing: 3px;
+            background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 50%, #10b981 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; text-transform: uppercase; font-family: var(--mono);
+        }
+        .chip-service { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(59,130,246,.2); }
+        .chip-version { background: rgba(167,139,250,.08); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+        .chip-env { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .topbar-time { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+        .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); position: relative; }
+        .pulse::after { content:''; position:absolute; top:-3px; left:-3px; width:13px; height:13px; border-radius:50%; border:1.5px solid var(--green); animation: pulse-ring 2s ease-out infinite; }
+        @keyframes pulse-ring { 0%{opacity:.8;transform:scale(.8)} 100%{opacity:0;transform:scale(1.6)} }
+
+        /* ─── Layout ─── */
+        .shell { max-width: 1440px; margin: 0 auto; padding: 20px 24px 40px; }
+
+        /* ─── Quick Actions ─── */
+        .actions { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .act-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: var(--sans);
+            border-radius: 6px; border: 1px solid var(--border); background: var(--bg-2);
+            color: var(--text-2); cursor: pointer; transition: all .15s;
+            text-decoration: none;
+        }
+        .act-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+        .act-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+        .act-btn.primary:hover { background: #2563eb; }
+        .act-btn.danger { border-color: rgba(239,68,68,.3); color: var(--red); }
+        .act-btn.danger:hover { background: var(--red-bg); }
+
+        /* ─── KPI Strip ─── */
+        .kpi-strip {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;
+        }
+        .kpi {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px 16px; position: relative; overflow: hidden;
+        }
+        .kpi::before {
+            content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: .4;
+        }
+        .kpi-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .kpi-value { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--text-0); line-height: 1; }
+        .kpi-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; font-family: var(--mono); }
+
+        /* ─── Price Table ─── */
+        .panel {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 10px;
+            overflow: hidden; margin-bottom: 16px;
+        }
+        .panel-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 20px; border-bottom: 1px solid var(--border-dim);
+        }
+        .panel-title { font-size: 13px; font-weight: 600; color: var(--text-1); display: flex; align-items: center; gap: 8px; }
+        .panel-title .dot { width:6px; height:6px; border-radius:50%; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 600;
+            color: var(--text-3); text-transform: uppercase; letter-spacing: .8px;
+            background: var(--bg-0); border-bottom: 1px solid var(--border-dim);
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border-dim);
+            vertical-align: middle; transition: background .1s;
+        }
+        tbody tr:hover td { background: var(--bg-hover); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .asset-cell { display: flex; align-items: center; gap: 10px; }
+        .asset-icon {
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 11px; font-family: var(--mono); color: #fff;
+        }
+        .asset-icon.usd_cop { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .asset-icon.usd_mxn { background: linear-gradient(135deg, #10b981, #059669); }
+        .asset-icon.eur_cop { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .asset-icon.gbp_cop { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+        .asset-icon.usd_brl { background: linear-gradient(135deg, #22d3ee, #0891b2); }
+        .asset-icon.eur_usd { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .asset-icon.usd_ars { background: linear-gradient(135deg, #64748b, #475569); }
+        .asset-icon.default { background: linear-gradient(135deg, var(--blue), var(--cyan)); }
+
+        .asset-name { font-weight: 700; font-size: 14px; color: var(--text-0); }
+        .asset-full { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+        .price-cell {
+            font-family: var(--mono); font-weight: 600; font-size: 15px; color: var(--text-0);
+        }
+
+        .source-row { display: flex; gap: 4px; flex-wrap: wrap; }
+        .src-tag {
+            font-family: var(--mono); font-size: 9px; font-weight: 500; padding: 2px 7px;
+            border-radius: 3px; white-space: nowrap;
+        }
+        .src-ok { background: var(--green-bg); color: var(--green); }
+        .src-miss { background: rgba(100,116,139,.1); color: var(--text-3); }
+
+        .change-pos { color: var(--green); }
+        .change-neg { color: var(--red); }
+        .change-zero { color: var(--text-3); }
+
+        .vol-cell { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+        .mcap-cell { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+
+        .age-cell { font-family: var(--mono); font-size: 11px; font-weight: 500; }
+        .age-fresh { color: var(--green); }
+        .age-warm { color: var(--amber); }
+        .age-stale { color: var(--red); }
+
+        .strat-pill {
+            font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 3px 8px;
+            border-radius: 3px; background: var(--blue-bg); color: var(--blue);
+        }
+
+        /* ─── Config Cards ─── */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; padding: 16px; }
+        .cfg-card {
+            background: var(--bg-0); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px; transition: border-color .15s;
+        }
+        .cfg-card:hover { border-color: var(--border); }
+        .cfg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cfg-asset { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+        .cfg-badge {
+            font-size: 9px; font-weight: 600; padding: 2px 8px; border-radius: 3px;
+            text-transform: uppercase; letter-spacing: .5px; font-family: var(--mono);
+        }
+        .cfg-on { background: var(--green-bg); color: var(--green); }
+        .cfg-off { background: var(--red-bg); color: var(--red); }
+        .cfg-meta { font-size: 11px; color: var(--text-3); display: flex; flex-direction: column; gap: 3px; }
+        .cfg-meta span { display: flex; align-items: center; gap: 6px; }
+
+        /* ─── Budget Bars ─── */
+        .budget-card {
+            background: var(--bg-0); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px;
+        }
+        .budget-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+        .budget-source { font-family: var(--mono); font-weight: 600; font-size: 13px; }
+        .budget-count { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+        .budget-track { height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
+        .budget-fill { height: 100%; border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+        .fill-safe { background: var(--green); }
+        .fill-warn { background: var(--amber); }
+        .fill-danger { background: var(--red); }
+        .budget-rem { font-family: var(--mono); font-size: 10px; color: var(--text-3); margin-top: 4px; }
+
+        /* ─── Seed Modal ─── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 28px; width: 480px; max-width: 90vw;
+        }
+        .modal h2 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .modal p { font-size: 13px; color: var(--text-2); margin-bottom: 16px; }
+        .seed-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .seed-item {
+            display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 6px;
+            font-family: var(--mono); font-size: 13px; font-weight: 600;
+        }
+        .seed-check { width: 16px; height: 16px; accent-color: var(--green); }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+        /* ─── Auth Screen ─── */
+        .auth-overlay {
+            position: fixed; inset: 0; z-index: 300;
+            background: var(--bg-0);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .auth-overlay.hidden { display: none; }
+        .auth-box {
+            background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px;
+            padding: 36px 40px; width: 420px; max-width: 90vw; text-align: center;
+        }
+        .auth-logo {
+            font-family: var(--mono); font-weight: 800; font-size: 28px; letter-spacing: 4px;
+            background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 50%, #10b981 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .auth-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; font-family: var(--mono); }
+        .auth-label { font-size: 12px; color: var(--text-2); text-align: left; margin-bottom: 6px; display: block; }
+        .auth-input {
+            width: 100%; padding: 10px 14px; font-family: var(--mono); font-size: 14px;
+            background: var(--bg-0); border: 1px solid var(--border); border-radius: 8px;
+            color: var(--text-0); outline: none; transition: border-color .15s;
+        }
+        .auth-input:focus { border-color: var(--blue); }
+        .auth-input::placeholder { color: var(--text-3); }
+        .auth-hint { font-size: 10px; color: var(--text-3); margin-top: 6px; text-align: left; font-family: var(--mono); }
+        .auth-btn {
+            margin-top: 18px; width: 100%; padding: 10px; font-size: 13px; font-weight: 600;
+            font-family: var(--sans); border: none; border-radius: 8px; cursor: pointer;
+            background: var(--blue); color: #fff; transition: background .15s;
+        }
+        .auth-btn:hover { background: #2563eb; }
+        .auth-error {
+            margin-top: 12px; font-size: 11px; color: var(--red); font-family: var(--mono);
+            display: none;
+        }
+        .auth-error.show { display: block; }
+        .auth-skip {
+            margin-top: 12px; font-size: 11px; color: var(--text-3); cursor: pointer;
+            text-decoration: underline; background: none; border: none; font-family: var(--mono);
+        }
+        .auth-skip:hover { color: var(--text-2); }
+
+        /* ─── Connection Status ─── */
+        .conn-chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; font-family: var(--mono); display: inline-flex;
+            align-items: center; gap: 5px; transition: all .3s;
+        }
+        .conn-chip .conn-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .conn-connected { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .conn-connected .conn-dot { background: var(--green); }
+        .conn-disconnected { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+        .conn-disconnected .conn-dot { background: var(--red); }
+        .conn-checking { background: rgba(245,158,11,.08); color: var(--amber); border: 1px solid rgba(245,158,11,.2); }
+        .conn-checking .conn-dot { background: var(--amber); animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        /* ─── Exchange Prices ─── */
+        .buy-price { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--green); }
+        .sell-price { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--red); }
+        .spread-cell { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+        .spread-pos { color: var(--green); }
+        .spread-neg { color: var(--red); }
+        .margin-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px; background: rgba(34,211,238,.08); color: var(--cyan);
+        }
+        .alert-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px; text-transform: uppercase;
+        }
+        .alert-SAFE { background: var(--green-bg); color: var(--green); }
+        .alert-WARNING { background: rgba(245,158,11,.08); color: var(--amber); }
+        .alert-DANGER { background: var(--red-bg); color: var(--red); }
+        .alert-BLOCKED { background: rgba(239,68,68,.15); color: var(--red); font-weight: 800; }
+        .mode-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px;
+        }
+        .mode-MANUAL { background: var(--blue-bg); color: var(--blue); }
+        .mode-AUTO { background: rgba(167,139,250,.08); color: var(--purple); }
+
+        /* ─── Band Cards ─── */
+        .band-card {
+            background: var(--bg-0); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px; transition: border-color .15s; position: relative; overflow: hidden;
+        }
+        .band-card:hover { border-color: var(--border); }
+        .band-card::before {
+            content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        }
+        .band-card.alert-border-SAFE::before { background: var(--green); opacity: .5; }
+        .band-card.alert-border-WARNING::before { background: var(--amber); opacity: .6; }
+        .band-card.alert-border-DANGER::before { background: var(--red); opacity: .7; }
+        .band-card.alert-border-BLOCKED::before { background: var(--red); opacity: 1; }
+        .band-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .band-asset { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+        .band-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+        .band-row .label { }
+        .band-row .val { font-family: var(--mono); font-weight: 500; color: var(--text-2); }
+        .band-divider { border: none; border-top: 1px solid var(--border-dim); margin: 8px 0; }
+        .entropy-bar {
+            height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; margin-top: 4px;
+        }
+        .entropy-fill { height: 100%; border-radius: 2px; transition: width .6s; }
+        .entropy-LOW { background: var(--green); }
+        .entropy-MEDIUM { background: var(--amber); }
+        .entropy-HIGH { background: var(--red); }
+        .entropy-EXTREME { background: #dc2626; }
+
+        /* ─── Empty ─── */
+        .empty { padding: 48px 20px; text-align: center; }
+        .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: .6; }
+        .empty-text { font-size: 14px; color: var(--text-3); }
+        .empty-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; opacity: .7; }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center; padding: 20px; font-size: 11px; color: var(--text-3);
+            border-top: 1px solid var(--border-dim); font-family: var(--mono); letter-spacing: .5px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) {
+            .shell { padding: 12px; }
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: 1fr; }
+            th, td { padding: 8px 10px; font-size: 11px; }
+            .topbar { padding: 0 12px; }
+            .brand { font-size: 14px; letter-spacing: 2px; }
+            .chip { font-size: 8px; padding: 2px 6px; }
+        }
+
+        /* ─── Animations ─── */
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+        .fade-in { animation: fadeIn .3s ease-out; }
+        .price-flash { animation: priceFlash .5s ease; }
+        @keyframes priceFlash { 0%{background:rgba(59,130,246,.15)} 100%{background:transparent} }
+    </style>
+</head>
+<body>
+
+<!-- ─── Topbar ─── -->
+<div class="topbar">
+    <div class="topbar-left">
+        <span class="brand">DECO</span>
+        <span class="chip chip-service">micro-pricing-fiat</span>
+        <span class="chip chip-version">v3.0.0</span>
+        <span class="chip chip-env" id="envChip">development</span>
+        <span class="conn-chip conn-checking" id="connChip"><span class="conn-dot"></span> checking...</span>
+    </div>
+    <div class="topbar-right">
+        <span class="topbar-time" id="clock"></span>
+        <span class="pulse" id="pulseIndicator"></span>
+    </div>
+</div>
+
+<!-- ─── Shell ─── -->
+<div class="shell">
+
+    <!-- Actions -->
+    <div class="actions">
+        <a class="act-btn" href="/api/docs" target="_blank">📚 Swagger</a>
+        <a class="act-btn" href="/api/v1/health" target="_blank">💊 Health</a>
+        <a class="act-btn" id="linkApiUsage" href="#" target="_blank">📊 API Budget</a>
+        <button class="act-btn primary" onclick="forceRefresh()">⟳ Force Refresh</button>
+        <button class="act-btn" onclick="openSeedModal()">🌱 Seed Pairs</button>
+        <button class="act-btn danger" onclick="clearToken()">🔑 Reset Token</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-strip">
+        <div class="kpi">
+            <div class="kpi-label">Pairs Tracked</div>
+            <div class="kpi-value" id="kpiAssets">—</div>
+            <div class="kpi-sub" id="kpiAssetsSub"></div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Smart Cron</div>
+            <div class="kpi-value" id="kpiCron">—</div>
+            <div class="kpi-sub" id="kpiCronSub">interval</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">API Calls Today</div>
+            <div class="kpi-value" id="kpiCalls">—</div>
+            <div class="kpi-sub" id="kpiCallsSub"></div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Last Fetch</div>
+            <div class="kpi-value" id="kpiLastFetch" style="font-size:16px">—</div>
+            <div class="kpi-sub" id="kpiLastFetchSub"></div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Uptime</div>
+            <div class="kpi-value" id="kpiUptime">—</div>
+            <div class="kpi-sub">since start</div>
+        </div>
+    </div>
+
+    <!-- ─── Price Table ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--green)"></span> Live Rates</div>
+            <span class="topbar-time" id="refreshTimer"></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pair</th>
+                    <th style="text-align:right">Base Rate</th>
+                    <th>Strategy</th>
+                    <th>Sources</th>
+                    <th style="text-align:right">24h Change</th>
+                    <th style="text-align:right">Age</th>
+                </tr>
+            </thead>
+            <tbody id="priceBody">
+                <tr><td colspan="6"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ─── Exchange Rates (BUY / SELL) ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span> Exchange Rates — BUY / SELL</div>
+            <div style="display:flex;flex-direction:column;gap:2px;font-size:10px;font-family:var(--mono);letter-spacing:.3px">
+                <div style="display:flex;gap:16px">
+                    <span style="color:var(--text-3)">🟢 <b style="color:var(--green)">BUY</b> = usuario compra</span>
+                    <span style="color:var(--text-3)">🔴 <b style="color:var(--red)">SELL</b> = usuario vende</span>
+                    <!-- <span style="color:var(--text-3)">🔵 <b style="color:var(--text-2)">Internal</b> = precio base (otros microservicios)</span> -->
+                    
+                </div>
+                <div style="display:flex;gap:16px;opacity:.7">
+                    <span style="color:var(--text-3)">🔴 <b style="color:var(--red)">SELL</b> = Broker vende</span>
+                    <span style="color:var(--text-3)">🟢 <b style="color:var(--green)">BUY</b> = Broker compra</span>
+                    <span style="color:var(--text-3)">🔵 <b style="color:var(--text-2)">Internal</b> = precio base (otros microservicios)</span>
+                    
+                </div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Pair</th>
+                    <th style="text-align:right">Internal Rate</th>
+                    <th style="text-align:right">Buy Spread</th>
+                    <th style="text-align:right">🟢 User BUY</th>
+                    <th style="text-align:right">Sell Spread</th>
+                    <th style="text-align:right">🔴 User SELL</th>
+                    <th style="text-align:center">Exchange Margin</th>
+                    <th style="text-align:center">Alert</th>
+                    <th style="text-align:center">Mode</th>
+                </tr>
+            </thead>
+            <tbody id="exchangeBody">
+                <tr><td colspan="9"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ─── Price Bands ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--purple)"></span> Rate Bands & Entropy</div>
+            <span style="font-size:10px;color:var(--text-3);font-family:var(--mono)">Spreads, límites legales, modo y motor de entropía</span>
+        </div>
+        <div class="grid-3" id="bandsGrid">
+            <div class="empty"><div class="empty-icon">⏳</div></div>
+        </div>
+    </div>
+
+    <!-- ─── Configs ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--blue)"></span> Pair Configurations</div>
+        </div>
+        <div class="grid-3" id="configGrid">
+            <div class="empty"><div class="empty-icon">⏳</div></div>
+        </div>
+    </div>
+
+    <!-- ─── API Budget ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--amber)"></span> API Rate-Limit Budget (UTC day)</div>
+            <div style="display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.3px">
+                <span><b style="color:var(--txt)">ER</b> = ExchangeRate-API</span>
+                <span><b style="color:var(--txt)">FK</b> = Frankfurter</span>
+                <span><b style="color:var(--txt)">EH</b> = exchangerate.host</span>
+                <span><b style="color:var(--txt)">FR</b> = FloatRates</span>
+                <span><b style="color:var(--txt)">FZ</b> = Fawaz Currency</span>
+            </div>
+        </div>
+        <div class="grid-3" id="budgetGrid">
+            <div class="empty"><div class="empty-icon">⏳</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Seed Modal ─── -->
+<div class="modal-overlay" id="seedModal">
+    <div class="modal fade-in">
+        <h2>🌱 Seed Initial Pairs</h2>
+        <p>Select which currency pairs to configure. Each will use all 5 sources (ExchangeRate-API, Frankfurter, exchangerate.host, FloatRates, Fawaz Currency) with AVERAGE strategy.</p>
+        <div class="seed-list" id="seedList"></div>
+        <div class="modal-actions">
+            <button class="act-btn" onclick="closeSeedModal()">Cancel</button>
+            <button class="act-btn primary" onclick="executeSeed()">Create Configurations</button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Auth Overlay ─── -->
+<div class="auth-overlay" id="authOverlay">
+    <div class="auth-box fade-in">
+        <div class="auth-logo">DECO EXCHANGE</div>
+        <div class="auth-subtitle">micro-pricing-fiat · dev dashboard</div>
+        <label class="auth-label">x-internal-auth token</label>
+        <input type="password" class="auth-input" id="authInput" placeholder="Ingresa tu token (ej: dev)" autocomplete="off">
+        <div class="auth-hint">💡 El token está en tu .env.local → INTERNAL_AUTH_TOKEN</div>
+        <div class="auth-error" id="authError">❌ Token inválido — el servidor rechazó la conexión</div>
+        <button class="auth-btn" id="authBtn" onclick="submitAuth()">Conectar</button>
+        <button class="auth-skip" onclick="skipAuth()">Continuar sin token (solo lectura pública)</button>
+    </div>
+</div>
+
+<!-- ─── Footer ─── -->
+<div class="footer">
+    DECO EXCHANGE &nbsp;·&nbsp; micro-pricing-fiat v3.1.0 &nbsp;·&nbsp; dev dashboard &nbsp;·&nbsp; not available in production
+</div>
+
+<script>
+// ─── Constants ──────────────────────────────────────────────
+const BASE = window.location.origin + '/api/v1';
+const REFRESH_MS = 60_000;
+const SEED_PAIRS = [
+    { code: 'USD_COP', base: 'USD', quote: 'COP', name: 'US Dollar → Colombian Peso', color: '#3b82f6' },
+    { code: 'USD_MXN', base: 'USD', quote: 'MXN', name: 'US Dollar → Mexican Peso', color: '#10b981' },
+    { code: 'EUR_COP', base: 'EUR', quote: 'COP', name: 'Euro → Colombian Peso', color: '#f59e0b' },
+    { code: 'GBP_COP', base: 'GBP', quote: 'COP', name: 'Pound → Colombian Peso', color: '#a78bfa' },
+    { code: 'USD_BRL', base: 'USD', quote: 'BRL', name: 'US Dollar → Brazilian Real', color: '#22d3ee' },
+    { code: 'EUR_USD', base: 'EUR', quote: 'USD', name: 'Euro → US Dollar', color: '#ef4444' },
+    { code: 'USD_ARS', base: 'USD', quote: 'ARS', name: 'US Dollar → Argentine Peso', color: '#64748b' },
+];
+const PAIR_NAMES = { USD_COP:'Dólar → Peso COP', USD_MXN:'Dólar → Peso MXN', EUR_COP:'Euro → Peso COP', GBP_COP:'Libra → Peso COP', USD_BRL:'Dólar → Real BRL', EUR_USD:'Euro → Dólar USD', USD_ARS:'Dólar → Peso ARS', USD_PEN:'Dólar → Sol PEN', USD_CLP:'Dólar → Peso CLP', EUR_MXN:'Euro → Peso MXN' };
+const ICON_CLASS = { USD_COP:'usd_cop', USD_MXN:'usd_mxn', EUR_COP:'eur_cop', GBP_COP:'gbp_cop', USD_BRL:'usd_brl', EUR_USD:'eur_usd', USD_ARS:'usd_ars' };
+let startTime = Date.now();
+let prevPrices = {};
+
+// ─── Auth Token ─────────────────────────────────────────────
+let AUTH = localStorage.getItem('deco_auth') || '';
+let hdrs = { 'x-internal-auth': AUTH, 'Content-Type': 'application/json' };
+let isConnected = false;
+
+function clearToken() {
+    localStorage.removeItem('deco_auth');
+    location.reload();
+}
+
+function updateConnStatus(status) {
+    const chip = $('connChip');
+    chip.className = 'conn-chip';
+    if (status === 'connected') {
+        chip.className += ' conn-connected';
+        chip.innerHTML = '<span class="conn-dot"></span> connected';
+        isConnected = true;
+    } else if (status === 'disconnected') {
+        chip.className += ' conn-disconnected';
+        chip.innerHTML = '<span class="conn-dot"></span> disconnected';
+        isConnected = false;
+    } else {
+        chip.className += ' conn-checking';
+        chip.innerHTML = '<span class="conn-dot"></span> checking...';
+    }
+}
+
+async function testConnection() {
+    updateConnStatus('checking');
+    try {
+        const r = await fetch(BASE + '/health', { headers: hdrs });
+        if (r.ok) {
+            updateConnStatus('connected');
+            return true;
+        }
+        // 401 = bad token
+        if (r.status === 401) {
+            updateConnStatus('disconnected');
+            return false;
+        }
+        updateConnStatus('connected'); // other status but server is reachable
+        return true;
+    } catch {
+        updateConnStatus('disconnected');
+        return false;
+    }
+}
+
+async function submitAuth() {
+    const input = $('authInput');
+    const token = input.value.trim();
+    AUTH = token;
+    hdrs = { 'x-internal-auth': AUTH, 'Content-Type': 'application/json' };
+    $('authBtn').textContent = 'Conectando...';
+    const ok = await testConnection();
+    if (ok) {
+        if (AUTH) localStorage.setItem('deco_auth', AUTH);
+        $('authOverlay').classList.add('hidden');
+        fetchAll();
+    } else {
+        $('authError').classList.add('show');
+        $('authBtn').textContent = 'Conectar';
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => { input.style.borderColor = ''; }, 2000);
+    }
+}
+
+function skipAuth() {
+    AUTH = '';
+    hdrs = { 'Content-Type': 'application/json' };
+    $('authOverlay').classList.add('hidden');
+    testConnection();
+    fetchAll();
+}
+
+// Enter key on input
+document.addEventListener('DOMContentLoaded', () => {
+    $('authInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitAuth();
+    });
+});
+
+// Auto-login if token is saved
+if (AUTH) {
+    (async () => {
+        const ok = await testConnection();
+        if (ok) {
+            $('authOverlay').classList.add('hidden');
+            fetchAll();
+        } else {
+            // Token expired / changed — show login
+            $('authOverlay').classList.remove('hidden');
+            $('authInput').value = AUTH;
+        }
+    })();
+}
+
+// ─── Fetch Wrapper ──────────────────────────────────────────
+async function api(path, opts = {}) {
+    try {
+        const r = await fetch(BASE + path, { headers: hdrs, ...opts });
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+    } catch (e) { console.warn('API', path, e.message); return null; }
+}
+
+// ─── Formatters ─────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+
+function fUsd(n) {
+    if (n == null) return '—';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (n >= 1) return '$' + n.toFixed(4);
+    return '$' + n.toFixed(6);
+}
+function fChange(n) {
+    if (n == null) return '<span class="change-zero">—</span>';
+    const c = n > 0 ? 'change-pos' : n < 0 ? 'change-neg' : 'change-zero';
+    const a = n > 0 ? '▲' : n < 0 ? '▼' : '—';
+    return `<span class="${c}">${a} ${Math.abs(n).toFixed(2)}%</span>`;
+}
+function fVol(n) {
+    if (!n) return '<span class="vol-cell">—</span>';
+    let s;
+    if (n >= 1e12) s = (n/1e12).toFixed(2) + 'T';
+    else if (n >= 1e9) s = (n/1e9).toFixed(2) + 'B';
+    else if (n >= 1e6) s = (n/1e6).toFixed(2) + 'M';
+    else if (n >= 1e3) s = (n/1e3).toFixed(1) + 'K';
+    else s = n.toFixed(0);
+    return `<span class="vol-cell">$${s}</span>`;
+}
+function fAge(d) {
+    if (!d) return { html: '<span class="age-cell age-stale">—</span>' };
+    const ms = Date.now() - new Date(d).getTime();
+    const s = Math.floor(ms/1000), m = Math.floor(s/60);
+    let text, cls;
+    if (m < 2) { text = s + 's'; cls = 'age-fresh'; }
+    else if (m < 5) { text = m + 'm ' + (s%60) + 's'; cls = 'age-warm'; }
+    else { text = m + 'm'; cls = 'age-stale'; }
+    return { html: `<span class="age-cell ${cls}">${text}</span>` };
+}
+function sourceTag(key, src) {
+    const label = { exchangeRateApi:'ER', frankfurter:'FK', exchangeRateHost:'EH', floatRates:'FR', fawazCurrency:'FZ' }[key] || key;
+    if (src && src.rate != null) return `<span class="src-tag src-ok">${label} ${fUsd(src.rate)}</span>`;
+    return `<span class="src-tag src-miss">${label} —</span>`;
+}
+
+// ─── Clock / Uptime ─────────────────────────────────────────
+function tickClock() {
+    const now = new Date();
+    $('clock').textContent = now.toLocaleTimeString() + ' · ' + now.toLocaleDateString();
+    const up = Math.floor((Date.now() - startTime) / 1000);
+    const h = Math.floor(up/3600), m = Math.floor((up%3600)/60), s = up%60;
+    $('kpiUptime').textContent = (h ? h+'h ':'') + m + 'm ' + s + 's';
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ─── Render: Prices ─────────────────────────────────────────
+async function renderPrices() {
+    const tickers = await api('/internal/pricing/fiat/all-rates');
+    const tb = $('priceBody');
+    if (!tickers || !tickers.length) {
+        tb.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No rates yet</div><div class="empty-sub">Seed pair configurations first, then wait for the first fetch cycle</div></div></td></tr>`;
+        $('kpiAssets').textContent = '0';
+        return;
+    }
+    $('kpiAssets').textContent = tickers.length;
+    let html = '', latest = null;
+    for (const t of tickers) {
+        const a = t.pairCode;
+        const iconCls = ICON_CLASS[a] || 'default';
+        const fullName = PAIR_NAMES[a] || a;
+        const rate = t.finalRate || t.baseRate;
+        const age = fAge(t.updatedAt || t.createdAt);
+        const d = new Date(t.updatedAt || t.createdAt);
+        if (!latest || d > latest) latest = d;
+
+        // Flash detection
+        const flash = prevPrices[a] && prevPrices[a] !== rate ? ' price-flash' : '';
+        prevPrices[a] = rate;
+
+        // Sources
+        const srcHtml = ['exchangeRateApi','frankfurter','exchangeRateHost','floatRates','fawazCurrency'].map(k => sourceTag(k, t[k] || (t.sources && t.sources[k]))).join('');
+
+        html += `<tr class="fade-in${flash}">
+            <td><div class="asset-cell">
+                <div class="asset-icon ${iconCls}">${a.slice(0,3)}</div>
+                <div><div class="asset-name">${a}</div><div class="asset-full">${fullName}</div></div>
+            </div></td>
+            <td style="text-align:right" class="price-cell">${fUsd(rate)}</td>
+            <td><span class="strat-pill">${t.aggregationStrategy || 'AVG'}</span></td>
+            <td><div class="source-row">${srcHtml}</div></td>
+            <td style="text-align:right">${fChange(t.rateChange24h)}</td>
+            <td style="text-align:right">${age.html}</td>
+        </tr>`;
+    }
+    tb.innerHTML = html;
+    if (latest) {
+        $('kpiLastFetch').textContent = latest.toLocaleTimeString();
+        $('kpiLastFetchSub').textContent = latest.toLocaleDateString();
+    }
+}
+
+// ─── Render: Configs ────────────────────────────────────────
+async function renderConfigs() {
+    const cfgs = await api('/internal/pricing/fiat/configurations');
+    const g = $('configGrid');
+    if (!cfgs || !cfgs.length) {
+        g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚙️</div><div class="empty-text">No configurations</div><div class="empty-sub">Click "Seed Pairs" to add USD_COP, USD_MXN, EUR_COP, GBP_COP, USD_BRL</div></div>`;
+        $('kpiAssetsSub').textContent = '0 configured';
+        return;
+    }
+    const on = cfgs.filter(c => c.enabled).length;
+    $('kpiAssetsSub').textContent = `${on} enabled / ${cfgs.length} total`;
+    let html = '';
+    for (const c of cfgs) {
+        const sources = (c.sources || []).map(s => {
+            const l = { EXCHANGERATE_API:'ER', FRANKFURTER:'FK', EXCHANGERATE_HOST:'EH', FLOATRATES:'FR', FAWAZ_CURRENCY:'FZ' }[s] || s;
+            return `<span class="src-tag src-ok">${l}</span>`;
+        }).join(' ');
+        html += `<div class="cfg-card">
+            <div class="cfg-header">
+                <span class="cfg-asset">${c.pairCode}</span>
+                <span class="cfg-badge ${c.enabled ? 'cfg-on' : 'cfg-off'}">${c.enabled ? 'active' : 'disabled'}</span>
+            </div>
+            <div class="cfg-meta">
+                <span>📡 ${sources}</span>
+                <span>📊 ${c.aggregationStrategy || 'AVERAGE'}</span>
+                <span>⏳ TTL ${c.ttlSeconds || 30}s</span>
+            </div>
+        </div>`;
+    }
+    g.innerHTML = html;
+}
+
+// ─── Render: Budget ─────────────────────────────────────────
+async function renderBudget() {
+    const b = await api('/internal/api-usage/budget');
+    const g = $('budgetGrid');
+    if (!b) { g.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">No budget data</div></div>'; return; }
+    let total = 0, html = '';
+    for (const [src, info] of Object.entries(b)) {
+        const used = info.used || 0, limit = info.limit || 300, rem = info.remaining ?? (limit - used);
+        total += used;
+        const pct = Math.min((used/limit) * 100, 100);
+        const cls = pct < 50 ? 'fill-safe' : pct < 80 ? 'fill-warn' : 'fill-danger';
+        html += `<div class="budget-card">
+            <div class="budget-header">
+                <span class="budget-source">${src}</span>
+                <span class="budget-count">${used} / ${limit}</span>
+            </div>
+            <div class="budget-track"><div class="budget-fill ${cls}" style="width:${pct}%"></div></div>
+            <div class="budget-rem">${rem} remaining</div>
+        </div>`;
+    }
+    g.innerHTML = html || '<div class="empty"><div class="empty-text">No sources tracked yet</div></div>';
+    $('kpiCalls').textContent = total;
+    $('kpiCallsSub').textContent = 'calls today';
+}
+
+// ─── Render: Cron ───────────────────────────────────────────
+async function renderCron() {
+    const c = await api('/internal/api-usage/smart-cron');
+    if (!c) return;
+    const ms = c.intervalMs || c.currentIntervalMs || 30000;
+    const secs = Math.round(ms / 1000);
+    $('kpiCron').textContent = secs + 's';
+    $('kpiCronSub').textContent = 'between fetches';
+}
+
+// ─── Render: Exchange Prices (BUY/SELL) ─────────────────────
+async function renderExchangePrices() {
+    const bands = await api('/internal/price-bands');
+    const tickers = await api('/internal/pricing/fiat/all-rates');
+    const tb = $('exchangeBody');
+    if (!bands || !bands.length || !tickers || !tickers.length) {
+        tb.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">💱</div><div class="empty-text">No rate bands configured</div><div class="empty-sub">Seed rate bands to see BUY/SELL rates</div></div></td></tr>`;
+        return;
+    }
+    // Map tickers by pair
+    const tickerMap = {};
+    for (const t of tickers) tickerMap[t.pairCode] = t;
+    // Sort bands by pair
+    bands.sort((a, b) => a.pairCode.localeCompare(b.pairCode));
+
+    let html = '';
+    for (const b of bands) {
+        if (!b.enabled) continue;
+        const t = tickerMap[b.pairCode];
+        if (!t) continue;
+        const base = t.finalRate || t.baseRate;
+        const buySpread = b.effectiveSellSpread ?? b.sellSpreadPercentage ?? 0; // user BUY = exchange sell spread
+        const sellSpread = b.effectiveBuySpread ?? b.buySpreadPercentage ?? 0; // user SELL = exchange buy spread
+        const buyPrice = base * (1 + buySpread / 100);
+        const sellPrice = base * (1 + sellSpread / 100);
+        const margin = buyPrice - sellPrice;
+        const marginPct = ((margin / base) * 100).toFixed(2);
+        const iconCls = ICON_CLASS[b.pairCode] || 'default';
+        const fullName = PAIR_NAMES[b.pairCode] || b.pairCode;
+
+        const profitUsd = (buyPrice - sellPrice).toFixed(2);
+
+        html += `<tr class="fade-in">
+            <td><div class="asset-cell">
+                <div class="asset-icon ${iconCls}">${b.pairCode.slice(0,3)}</div>
+                <div><div class="asset-name">${b.pairCode}</div><div class="asset-full">${fullName}</div></div>
+            </div></td>
+            <td style="text-align:right"><span class="price-cell" style="color:var(--blue)">${fUsd(base)}</span></td>
+            <td style="text-align:right"><span class="spread-cell spread-pos">+${buySpread.toFixed(2)}%</span></td>
+            <td style="text-align:right"><span class="buy-price">${fUsd(buyPrice)}</span></td>
+            <td style="text-align:right"><span class="spread-cell spread-neg">${sellSpread.toFixed(2)}%</span></td>
+            <td style="text-align:right"><span class="sell-price">${fUsd(sellPrice)}</span></td>
+            <td style="text-align:center"><span class="margin-pill">${marginPct}% · $${profitUsd}</span></td>
+            <td style="text-align:center"><span class="alert-pill alert-${b.alertLevel}">${b.alertLevel}</span></td>
+            <td style="text-align:center"><span class="mode-pill mode-${b.mode}">${b.mode}</span></td>
+        </tr>`;
+    }
+    tb.innerHTML = html || `<tr><td colspan="9"><div class="empty"><div class="empty-text">No active bands</div></div></td></tr>`;
+}
+
+// ─── Render: Rate Bands Cards ──────────────────────────────
+async function renderBands() {
+    const bands = await api('/internal/price-bands');
+    const tickers = await api('/internal/pricing/fiat/all-rates');
+    const g = $('bandsGrid');
+    if (!bands || !bands.length) {
+        g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎚️</div><div class="empty-text">No rate bands</div></div>`;
+        return;
+    }
+    // Map tickers
+    const tickerMap = {};
+    if (tickers) for (const t of tickers) tickerMap[t.pairCode] = t;
+
+    bands.sort((a, b) => a.pairCode.localeCompare(b.pairCode));
+    let html = '';
+    for (const b of bands) {
+        const e = b.entropy || {};
+        const eScore = (e.score ?? 0);
+        const eLevel = e.level || 'LOW';
+        const ePct = Math.min(eScore * 100, 100).toFixed(0);
+
+        // Calculate real rates
+        const t = tickerMap[b.pairCode];
+        const base = t ? (t.finalRate || t.baseRate) : null;
+        const sellSpread = b.effectiveSellSpread ?? b.sellSpreadPercentage ?? 0;
+        const buySpread = b.effectiveBuySpread ?? b.buySpreadPercentage ?? 0;
+        const userBuy = base ? base * (1 + sellSpread / 100) : null;
+        const userSell = base ? base * (1 + buySpread / 100) : null;
+
+        html += `<div class="band-card alert-border-${b.alertLevel}">
+            <div class="band-header">
+                <span class="band-asset">${b.pairCode}</span>
+                <div style="display:flex;gap:4px">
+                    <span class="mode-pill mode-${b.mode}">${b.mode}</span>
+                    <span class="alert-pill alert-${b.alertLevel}">${b.alertLevel}</span>
+                </div>
+            </div>
+            ${base ? `<div style="background:var(--bg-2);border-radius:6px;padding:10px;margin-bottom:10px">
+                <div class="band-row"><span class="label" style="color:var(--blue)">🔵 Internal (base)</span><span class="val" style="color:var(--blue);font-weight:700;font-size:13px">${fUsd(base)}</span></div>
+                <div class="band-row"><span class="label" style="color:var(--green)">🟢 User BUY</span><span class="val" style="color:var(--green);font-weight:700;font-size:13px">${fUsd(userBuy)}</span></div>
+                <div class="band-row"><span class="label" style="color:var(--red)">🔴 User SELL</span><span class="val" style="color:var(--red);font-weight:700;font-size:13px">${fUsd(userSell)}</span></div>
+            </div>` : ''}
+            <div class="band-row"><span class="label">Effective Buy</span><span class="val" style="color:var(--red)">${b.effectiveBuySpread}%</span></div>
+            <div class="band-row"><span class="label">Effective Sell</span><span class="val" style="color:var(--green)">+${b.effectiveSellSpread}%</span></div>
+            <div class="band-row"><span class="label">Manual Buy / Sell</span><span class="val">${b.buySpreadPercentage}% / +${b.sellSpreadPercentage}%</span></div>
+            <hr class="band-divider">
+            <div class="band-row"><span class="label">Legal Limits</span><span class="val">-${b.legalMaxLowerPercentage}% / +${b.legalMaxUpperPercentage}%</span></div>
+            <hr class="band-divider">
+            <div class="band-row"><span class="label">Entropy</span><span class="val">${eScore.toFixed(4)} (${eLevel})</span></div>
+            <div class="entropy-bar"><div class="entropy-fill entropy-${eLevel}" style="width:${ePct}%"></div></div>
+            <div class="band-row" style="margin-top:4px"><span class="label">Entropy Rec</span><span class="val">${e.recommendedBuySpread ?? '—'}% / +${e.recommendedSellSpread ?? '—'}%</span></div>
+            ${b.alertMessage ? `<div style="font-size:10px;color:var(--text-3);margin-top:6px;font-family:var(--mono)">${b.alertMessage}</div>` : ''}
+        </div>`;
+    }
+    g.innerHTML = html;
+}
+
+// ─── Seed Modal ─────────────────────────────────────────────
+function openSeedModal() {
+    const list = $('seedList');
+    list.innerHTML = SEED_PAIRS.map(a =>
+        `<label class="seed-item">
+            <input type="checkbox" class="seed-check" value="${a.code}" checked>
+            <span style="color:${a.color};font-weight:700">${a.code}</span>
+            <span style="color:var(--text-3);font-weight:400;font-size:12px">${a.name}</span>
+        </label>`
+    ).join('');
+    $('seedModal').classList.add('open');
+}
+function closeSeedModal() { $('seedModal').classList.remove('open'); }
+
+async function executeSeed() {
+    const checks = $('seedList').querySelectorAll('.seed-check:checked');
+    const assets = Array.from(checks).map(c => c.value);
+    if (!assets.length) return;
+    closeSeedModal();
+    for (const code of assets) {
+        const pair = SEED_PAIRS.find(p => p.code === code);
+        await api('/internal/pricing/fiat/configurations', {
+            method: 'POST',
+            body: JSON.stringify({
+                baseCurrency: pair ? pair.base : code.split('_')[0],
+                quoteCurrency: pair ? pair.quote : code.split('_')[1],
+                sources: ['EXCHANGERATE_API', 'FRANKFURTER', 'FLOATRATES', 'FAWAZ_CURRENCY'],
+                aggregationStrategy: 'AVERAGE',
+                enabled: true,
+            }),
+        });
+    }
+    // Force a rate refresh after seeding
+    await api('/internal/pricing/fiat/refresh', { method: 'POST' });
+    setTimeout(fetchAll, 3000);
+}
+
+// ─── Force Refresh ──────────────────────────────────────────
+async function forceRefresh() {
+    await api('/internal/pricing/fiat/refresh', { method: 'POST' });
+    setTimeout(fetchAll, 3000);
+}
+
+// ─── Refresh Countdown ─────────────────────────────────────
+let nextRefresh = Date.now() + REFRESH_MS;
+function tickRefreshTimer() {
+    const left = Math.max(0, Math.ceil((nextRefresh - Date.now()) / 1000));
+    $('refreshTimer').textContent = `next refresh ${left}s`;
+}
+setInterval(tickRefreshTimer, 500);
+
+// ─── Master Fetch ───────────────────────────────────────────
+async function fetchAll() {
+    nextRefresh = Date.now() + REFRESH_MS;
+    try {
+        await Promise.all([renderPrices(), renderExchangePrices(), renderBands(), renderConfigs(), renderBudget(), renderCron()]);
+        updateConnStatus('connected');
+        $('pulseIndicator').style.background = 'var(--green)';
+    } catch {
+        updateConnStatus('disconnected');
+        $('pulseIndicator').style.background = 'var(--red)';
+    }
+}
+
+// ─── Init ───────────────────────────────────────────────────
+$('linkApiUsage').href = BASE + '/internal/api-usage';
+// Only auto-fetch if no saved token (with token, auto-login handles it)
+if (!AUTH) {
+    fetchAll();
+}
+setInterval(fetchAll, REFRESH_MS);
+</script>
+</body>
+</html>

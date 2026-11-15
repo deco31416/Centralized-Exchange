@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auth Debug Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-6xl mx-auto p-6 space-y-6">
+    <header class="flex items-center justify-between">
+      <h1 class="text-2xl font-semibold">Auth Debug Dashboard</h1>
+      <span id="envInfo" class="text-sm text-slate-500"></span>
+    </header>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Registration -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3">
+        <h2 class="text-lg font-medium">Register</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <input id="regEmail" type="email" placeholder="email" class="border rounded px-3 py-2">
+          <input id="regPassword" type="password" placeholder="password" class="border rounded px-3 py-2">
+          <div class="text-xs text-slate-600 space-y-1">
+            <div>Password requirements:</div>
+            <div>• 8-128 characters</div>
+            <div>• At least 1 lowercase, 1 uppercase, 1 number, 1 special character (@$!%*?&)</div>
+          </div>
+          <input id="regDisplayName" type="text" placeholder="display name (optional)" class="border rounded px-3 py-2">
+          <input id="regOrgId" type="text" placeholder="org_id (optional)" class="border rounded px-3 py-2">
+          <button id="registerBtn" class="bg-blue-600 text-white rounded px-4 py-2">Register</button>
+        </div>
+      </div>
+
+      <!-- Login -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3">
+        <h2 class="text-lg font-medium">Login</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <input id="loginEmail" type="email" placeholder="email" class="border rounded px-3 py-2">
+          <input id="loginPassword" type="password" placeholder="password" class="border rounded px-3 py-2">
+          <button id="loginBtn" class="bg-green-600 text-white rounded px-4 py-2">Login</button>
+        </div>
+        <div class="text-sm text-slate-600">Stores refresh token in httpOnly cookie; access token shown below.</div>
+      </div>
+
+      <!-- Refresh Token -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3">
+        <h2 class="text-lg font-medium">Refresh Access Token</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <input id="refreshInput" type="text" placeholder="optional refresh token (will use cookie if empty)" class="border rounded px-3 py-2">
+          <button id="refreshBtn" class="bg-amber-600 text-white rounded px-4 py-2">Refresh</button>
+        </div>
+      </div>
+
+      <!-- Password & Email -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3">
+        <h2 class="text-lg font-medium">Email & Password</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <input id="verifyToken" type="text" placeholder="verify-email token" class="border rounded px-3 py-2">
+          <button id="verifyEmailBtn" class="bg-indigo-600 text-white rounded px-4 py-2">Verify Email</button>
+          <hr>
+          <input id="forgotEmail" type="email" placeholder="email for forgot-password" class="border rounded px-3 py-2">
+          <button id="forgotBtn" class="bg-slate-700 text-white rounded px-4 py-2">Request Password Reset</button>
+          <hr>
+          <input id="resetToken" type="text" placeholder="reset token" class="border rounded px-3 py-2">
+          <input id="newPassword" type="password" placeholder="new password" class="border rounded px-3 py-2">
+          <button id="resetBtn" class="bg-slate-900 text-white rounded px-4 py-2">Reset Password</button>
+        </div>
+      </div>
+
+      <!-- Authenticated actions -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3 md:col-span-2">
+        <h2 class="text-lg font-medium">Authenticated</h2>
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+          <div class="space-y-3">
+            <div class="flex gap-2">
+              <input id="currentPassword" type="password" placeholder="current password" class="border rounded px-3 py-2 w-full">
+              <input id="changePassword" type="password" placeholder="new password" class="border rounded px-3 py-2 w-full">
+            </div>
+            <button id="changePasswordBtn" class="bg-purple-600 text-white rounded px-4 py-2">Change Password</button>
+          </div>
+          <div class="space-y-3">
+            <div class="flex gap-2">
+              <button id="sessionsBtn" class="bg-teal-600 text-white rounded px-4 py-2">Get Sessions</button>
+              <button id="devicesBtn" class="bg-teal-700 text-white rounded px-4 py-2">Get Devices</button>
+              <button id="logoutBtn" class="bg-rose-600 text-white rounded px-4 py-2">Logout</button>
+              <button id="logoutAllBtn" class="bg-rose-700 text-white rounded px-4 py-2">Logout All</button>
+            </div>
+            <div class="flex gap-2">
+              <input id="revokeSessionId" type="text" placeholder="sessionId" class="border rounded px-3 py-2 w-full">
+              <button id="revokeSessionBtn" class="bg-orange-600 text-white rounded px-4 py-2">Revoke Session</button>
+            </div>
+            <div class="flex gap-2">
+              <input id="revokeDeviceId" type="text" placeholder="deviceId" class="border rounded px-3 py-2 w-full">
+              <button id="revokeDeviceBtn" class="bg-orange-700 text-white rounded px-4 py-2">Revoke Device</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Magic Link -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3 md:col-span-2">
+        <h2 class="text-lg font-medium">Magic Link</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input id="magicEmail" type="email" placeholder="email" class="border rounded px-3 py-2">
+          <button id="magicBtn" class="bg-cyan-600 text-white rounded px-4 py-2">Send Magic Link</button>
+          <button id="healthBtn" class="bg-slate-500 text-white rounded px-4 py-2">Health Check</button>
+        </div>
+      </div>
+
+      <!-- Tokens and User -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3 md:col-span-2">
+        <h2 class="text-lg font-medium">Session State</h2>
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-3 items-start">
+          <div class="space-y-2">
+            <label class="text-sm text-slate-600">Access Token</label>
+            <textarea id="accessToken" class="border rounded px-3 py-2 w-full h-28 font-mono text-xs"></textarea>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm text-slate-600">User</label>
+            <textarea id="currentUser" class="border rounded px-3 py-2 w-full h-28 font-mono text-xs"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log -->
+      <div class="bg-white rounded-lg shadow p-5 space-y-3 md:col-span-2">
+        <h2 class="text-lg font-medium">Log</h2>
+        <pre id="log" class="bg-slate-900 text-slate-100 p-3 rounded h-72 overflow-auto text-xs"></pre>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const apiBase = `${location.origin}/api/v1/auth`;
+    const envInfo = document.getElementById('envInfo');
+    envInfo.textContent = `API: ${apiBase}`;
+
+    const logEl = document.getElementById('log');
+    const accessTokenEl = document.getElementById('accessToken');
+    const currentUserEl = document.getElementById('currentUser');
+
+    let accessToken = '';
+
+    function log(msg, data) {
+      const time = new Date().toISOString();
+      const line = typeof data === 'undefined' ? msg : `${msg} \n${JSON.stringify(data, null, 2)}`;
+      logEl.textContent = `[${time}] ${line}\n\n` + logEl.textContent;
+    }
+
+    async function request(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+      const res = await fetch(`${apiBase}${path}`, {
+        method: 'GET',
+        credentials: 'include',
+        ...options,
+        headers,
+      });
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      const body = isJson ? await res.json().catch(() => ({})) : await res.text();
+      if (!res.ok) {
+        const error = { status: res.status, body };
+        // Log validation errors more clearly
+        if (body?.message && Array.isArray(body.message)) {
+          log('Validation Errors', body.message.join(', '));
+        } else if (body?.message) {
+          log('Error Message', body.message);
+        }
+        throw error;
+      }
+      return body;
+    }
+
+    function setAuthState(data) {
+      accessToken = data?.access_token || accessToken;
+      accessTokenEl.value = accessToken || '';
+      currentUserEl.value = data?.user ? JSON.stringify(data.user, null, 2) : currentUserEl.value;
+    }
+
+    // Elements
+    const $ = (id) => document.getElementById(id);
+
+    // Register
+    $('registerBtn').onclick = async () => {
+      try {
+        const email = $('regEmail').value.trim();
+        const password = $('regPassword').value;
+        const display_name = $('regDisplayName').value.trim() || undefined;
+        const org_id = $('regOrgId').value.trim() || undefined;
+        
+        if (!email || !password) {
+          log('Register ERR', { message: 'Email and password are required' });
+          return;
+        }
+        
+        const res = await request('/register', {
+          method: 'POST',
+          body: JSON.stringify({ email, password, display_name, org_id })
+        });
+        log('Register OK', res);
+      } catch (e) { 
+        log('Register ERR', e);
+        if (e.body?.message) {
+          log('Validation Error', e.body.message);
+        }
+      }
+    };
+
+    // Login
+    $('loginBtn').onclick = async () => {
+      try {
+        const email = $('loginEmail').value.trim();
+        const password = $('loginPassword').value;
+        const res = await request('/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        setAuthState(res);
+        log('Login OK', res);
+      } catch (e) { log('Login ERR', e); }
+    };
+
+    // Refresh
+    $('refreshBtn').onclick = async () => {
+      try {
+        const rt = $('refreshInput').value.trim();
+        const body = rt ? { refresh_token: rt } : {};
+        const res = await request('/refresh', {
+          method: 'POST',
+          body: JSON.stringify(body)
+        });
+        setAuthState(res);
+        log('Refresh OK', res);
+      } catch (e) { log('Refresh ERR', e); }
+    };
+
+    // Verify Email
+    $('verifyEmailBtn').onclick = async () => {
+      try {
+        const token = $('verifyToken').value.trim();
+        const res = await request('/verify-email', {
+          method: 'POST',
+          body: JSON.stringify({ token })
+        });
+        log('Verify Email OK', res);
+      } catch (e) { log('Verify Email ERR', e); }
+    };
+
+    // Forgot Password
+    $('forgotBtn').onclick = async () => {
+      try {
+        const email = $('forgotEmail').value.trim();
+        const res = await request('/forgot-password', {
+          method: 'POST',
+          body: JSON.stringify({ email })
+        });
+        log('Forgot Password OK', res);
+      } catch (e) { log('Forgot Password ERR', e); }
+    };
+
+    // Reset Password
+    $('resetBtn').onclick = async () => {
+      try {
+        const token = $('resetToken').value.trim();
+        const new_password = $('newPassword').value;
+        const res = await request('/reset-password', {
+          method: 'POST',
+          body: JSON.stringify({ token, new_password })
+        });
+        log('Reset Password OK', res);
+      } catch (e) { log('Reset Password ERR', e); }
+    };
+
+    // Change Password (auth)
+    $('changePasswordBtn').onclick = async () => {
+      try {
+        const current_password = $('currentPassword').value;
+        const new_password = $('changePassword').value;
+        const res = await request('/change-password', {
+          method: 'POST',
+          body: JSON.stringify({ current_password, new_password })
+        });
+        log('Change Password OK', res);
+      } catch (e) { log('Change Password ERR', e); }
+    };
+
+    // Get Sessions (auth)
+    $('sessionsBtn').onclick = async () => {
+      try {
+        const res = await request('/sessions');
+        log('Sessions OK', res);
+      } catch (e) { log('Sessions ERR', e); }
+    };
+
+    // Get Devices (auth)
+    $('devicesBtn').onclick = async () => {
+      try {
+        const res = await request('/devices');
+        log('Devices OK', res);
+      } catch (e) { log('Devices ERR', e); }
+    };
+
+    // Revoke Session (auth)
+    $('revokeSessionBtn').onclick = async () => {
+      try {
+        const sessionId = $('revokeSessionId').value.trim();
+        const res = await request(`/sessions/${encodeURIComponent(sessionId)}/revoke`, { method: 'POST' });
+        log('Revoke Session OK', res);
+      } catch (e) { log('Revoke Session ERR', e); }
+    };
+
+    // Revoke Device (auth)
+    $('revokeDeviceBtn').onclick = async () => {
+      try {
+        const deviceId = $('revokeDeviceId').value.trim();
+        const res = await request(`/devices/${encodeURIComponent(deviceId)}/revoke`, { method: 'POST' });
+        log('Revoke Device OK', res);
+      } catch (e) { log('Revoke Device ERR', e); }
+    };
+
+    // Logout (auth)
+    $('logoutBtn').onclick = async () => {
+      try {
+        const res = await request('/logout', { method: 'POST' });
+        log('Logout OK', res);
+      } catch (e) { log('Logout ERR', e); }
+    };
+
+    // Logout All (auth)
+    $('logoutAllBtn').onclick = async () => {
+      try {
+        const res = await request('/logout-all', { method: 'POST' });
+        log('Logout All OK', res);
+      } catch (e) { log('Logout All ERR', e); }
+    };
+
+    // Magic Link
+    $('magicBtn').onclick = async () => {
+      try {
+        const email = $('magicEmail').value.trim();
+        const res = await request('/magic-link', {
+          method: 'POST',
+          body: JSON.stringify({ email })
+        });
+        log('Magic Link OK', res);
+      } catch (e) { log('Magic Link ERR', e); }
+    };
+
+    // Health
+    $('healthBtn').onclick = async () => {
+      try {
+        const res = await request('/health');
+        log('Health OK', res);
+      } catch (e) { log('Health ERR', e); }
+    };
+  </script>
+</body>
+</html>

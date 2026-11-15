@@ -1,0 +1,127 @@
+# compiled output
+/dist
+/node_modules
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# temp directory
+.temp
+.tmp
+
+# Certificados y llaves criptograficas (STP/SPEI)
+certs/
+*.pem
+*.jks
+*.p12
+*.cer
+*.key
+*.crt
+
+# Yarn Berry / PnP
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# TypeScript
+*.tsbuildinfo
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock# Repo hygiene
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+.cache/
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Deco Exchange: local secrets and generated artifacts
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
+!.env.sample
+!.env.*.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*.log
+*.dump
+*.sql.gz
+*.sqlite
+*.db
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+.pnp.*
+credentials/
+*.asc
+*.gpg
+.git-credentials
+*.firebase-adminsdk*.json
+*google-credentials*.json
+*service-account*.json
+.npmrc
+.pypirc
+.netrc
+.aws/credentials
+**/.aws/credentials
+.docker/config.json
+**/.docker/config.json

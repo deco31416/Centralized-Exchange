@@ -1,0 +1,410 @@
+import type { LucideIcon } from "lucide-react"
+import { BadgeDollarSign, Banknote, Building2, CreditCard, Landmark, Smartphone, Store } from "lucide-react"
+
+export type AddMoneyMethod = {
+  id: string
+  title: string
+  description: string
+  network: string
+  time: string
+  fee: string
+  category: "bank" | "electronic" | "cash" | "card"
+  icon: LucideIcon
+}
+
+const defaultMethods: AddMoneyMethod[] = [
+  {
+    id: "bank-transfer",
+    title: "Transferencia bancaria",
+    description: "Desde cuenta bancaria",
+    network: "Banco local",
+    time: "15-45 min",
+    fee: "Sin costo Deco",
+    category: "bank",
+    icon: Landmark,
+  },
+  {
+    id: "digital-wallet",
+    title: "Billetera digital",
+    description: "Medio digital local",
+    network: "Proveedor local",
+    time: "5-20 min",
+    fee: "Segun proveedor",
+    category: "electronic",
+    icon: Smartphone,
+  },
+  {
+    id: "cash-point",
+    title: "Punto autorizado",
+    description: "Deposito en efectivo",
+    network: "Aliado fisico",
+    time: "10-60 min",
+    fee: "Variable",
+    category: "cash",
+    icon: Store,
+  },
+]
+
+const methodsByRegion: Record<string, AddMoneyMethod[]> = {
+  CO: [
+    {
+      id: "pse",
+      title: "PSE / Banco colombiano",
+      description: "Banco colombiano local",
+      network: "PSE",
+      time: "5-20 min",
+      fee: "Sin costo Deco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "nequi-daviplata",
+      title: "Nequi o Daviplata",
+      description: "Billetera digital local",
+      network: "Wallet local",
+      time: "5-15 min",
+      fee: "Segun proveedor",
+      category: "electronic",
+      icon: Smartphone,
+    },
+    {
+      id: "corresponsal",
+      title: "Corresponsal aliado",
+      description: "Puntos autorizados locales",
+      network: "Efectivo",
+      time: "15-60 min",
+      fee: "Variable",
+      category: "cash",
+      icon: Store,
+    },
+  ],
+  US: [
+    {
+      id: "ach",
+      title: "ACH transfer",
+      description: "Cuenta bancaria estadounidense",
+      network: "ACH",
+      time: "1-2 dias",
+      fee: "Baja",
+      category: "bank",
+      icon: Building2,
+    },
+    {
+      id: "wire",
+      title: "Wire transfer",
+      description: "Transferencia bancaria directa",
+      network: "Wire",
+      time: "Mismo dia",
+      fee: "Banco emisor",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "card-us",
+      title: "Tarjeta",
+      description: "Tarjeta elegible rapida",
+      network: "Card rails",
+      time: "Minutos",
+      fee: "Variable",
+      category: "card",
+      icon: CreditCard,
+    },
+  ],
+  MX: [
+    {
+      id: "spei",
+      title: "SPEI",
+      description: "Banco mexicano local",
+      network: "SPEI",
+      time: "5-30 min",
+      fee: "Sin costo Deco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "cash-mx",
+      title: "Pago en efectivo",
+      description: "Efectivo punto autorizado",
+      network: "Efectivo",
+      time: "15-60 min",
+      fee: "Variable",
+      category: "cash",
+      icon: Store,
+    },
+    {
+      id: "card-mx",
+      title: "Tarjeta",
+      description: "Tarjeta local elegible",
+      network: "Tarjeta",
+      time: "Minutos",
+      fee: "Variable",
+      category: "card",
+      icon: CreditCard,
+    },
+  ],
+  CL: [
+    {
+      id: "bank-cl",
+      title: "Transferencia bancaria",
+      description: "Banco chileno local",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "wallet-cl",
+      title: "Medio digital",
+      description: "Proveedor digital local",
+      network: "Proveedor local",
+      time: "10-30 min",
+      fee: "Variable",
+      category: "electronic",
+      icon: Smartphone,
+    },
+  ],
+  PE: [
+    {
+      id: "bank-pe",
+      title: "Transferencia bancaria",
+      description: "Banco peruano local",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "yape-plin",
+      title: "Yape o Plin",
+      description: "Billetera digital local",
+      network: "Wallet local",
+      time: "5-20 min",
+      fee: "Variable",
+      category: "electronic",
+      icon: Smartphone,
+    },
+  ],
+  AR: [
+    {
+      id: "cvu-ars",
+      title: "Transferencia CVU/CBU",
+      description: "Cuenta bancaria virtual",
+      network: "CBU/CVU",
+      time: "10-45 min",
+      fee: "Variable",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "wallet-ar",
+      title: "Billetera digital",
+      description: "Medio digital local",
+      network: "Wallet local",
+      time: "5-30 min",
+      fee: "Segun proveedor",
+      category: "electronic",
+      icon: Smartphone,
+    },
+  ],
+  VE: [
+    {
+      id: "mobile-payment-ve",
+      title: "Pago movil",
+      description: "Pago movil local",
+      network: "Pago movil",
+      time: "10-45 min",
+      fee: "Variable",
+      category: "electronic",
+      icon: Smartphone,
+    },
+    {
+      id: "bank-ve",
+      title: "Transferencia bancaria",
+      description: "Banco local comprobante",
+      network: "Banco local",
+      time: "15-60 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+  ],
+  AW: [
+    {
+      id: "bank-aw",
+      title: "Transferencia bancaria",
+      description: "Banco arubeno local",
+      network: "Banco local",
+      time: "15-60 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "cash-aw",
+      title: "Punto autorizado",
+      description: "Efectivo red habilitada",
+      network: "Efectivo",
+      time: "15-60 min",
+      fee: "Variable",
+      category: "cash",
+      icon: Store,
+    },
+  ],
+  BR: [
+    {
+      id: "pix",
+      title: "Pix",
+      description: "Pago Pix instantaneo",
+      network: "Pix",
+      time: "Minutos",
+      fee: "Sin costo Deco",
+      category: "electronic",
+      icon: BadgeDollarSign,
+    },
+    {
+      id: "bank-br",
+      title: "Transferencia bancaria",
+      description: "Banco local disponible",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+  ],
+  DO: [
+    {
+      id: "bank-do",
+      title: "Transferencia bancaria",
+      description: "Banco dominicano local",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "cash-do",
+      title: "Punto autorizado",
+      description: "Punto aliado local",
+      network: "Efectivo",
+      time: "15-60 min",
+      fee: "Variable",
+      category: "cash",
+      icon: Store,
+    },
+  ],
+  CA: [
+    {
+      id: "eft-ca",
+      title: "EFT / transferencia bancaria",
+      description: "Banco canadiense local",
+      network: "EFT",
+      time: "1-2 dias",
+      fee: "Baja",
+      category: "bank",
+      icon: Building2,
+    },
+    {
+      id: "interac-ca",
+      title: "Interac e-Transfer",
+      description: "Interac compatible local",
+      network: "Interac",
+      time: "Minutos",
+      fee: "Variable",
+      category: "electronic",
+      icon: BadgeDollarSign,
+    },
+  ],
+  SV: [
+    {
+      id: "bank-sv",
+      title: "Transferencia bancaria",
+      description: "Banco salvadoreno local",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "wallet-sv",
+      title: "Billetera local",
+      description: "Billetera local habilitada",
+      network: "Wallet local",
+      time: "5-30 min",
+      fee: "Variable",
+      category: "electronic",
+      icon: Smartphone,
+    },
+  ],
+  PA: [
+    {
+      id: "bank-pa",
+      title: "Transferencia bancaria",
+      description: "Banco panameno local",
+      network: "Banco local",
+      time: "15-45 min",
+      fee: "Segun banco",
+      category: "bank",
+      icon: Landmark,
+    },
+    {
+      id: "cash-pa",
+      title: "Punto autorizado",
+      description: "Efectivo red aliada",
+      network: "Efectivo",
+      time: "15-60 min",
+      fee: "Variable",
+      category: "cash",
+      icon: Store,
+    },
+  ],
+  EU: [
+    {
+      id: "sepa",
+      title: "SEPA transfer",
+      description: "Cuenta bancaria europea",
+      network: "SEPA",
+      time: "1-2 dias",
+      fee: "Baja",
+      category: "bank",
+      icon: Building2,
+    },
+    {
+      id: "card-eu",
+      title: "Tarjeta",
+      description: "Tarjeta elegible rapida",
+      network: "Tarjeta",
+      time: "Minutos",
+      fee: "Variable",
+      category: "card",
+      icon: CreditCard,
+    },
+  ],
+}
+
+export function getAddMoneyMethods(region: string) {
+  return methodsByRegion[region] ?? defaultMethods
+}
+
+const quickAmountsByCurrency: Record<string, number[]> = {
+  COP: [10000, 25000, 50000, 100000],
+  USD: [10, 25, 50, 100],
+  EUR: [10, 25, 50, 100],
+  MXN: [100, 250, 500, 1000],
+  PEN: [20, 50, 100, 250],
+  BRL: [20, 50, 100, 250],
+}
+
+export function getQuickAmounts(currency: string) {
+  return quickAmountsByCurrency[currency.toUpperCase()] ?? [25, 50, 100, 250]
+}
+
+export const receiptItems = [
+  { label: "Metodo", fallback: "Selecciona un metodo" },
+  { label: "Confirmacion", fallback: "Segun red local" },
+  { label: "Comision Deco", fallback: "Se muestra antes de confirmar" },
+]

@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECO31416 — Launchpad Pricing v3.0.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #05070a;
+            --bg-1: #0a0e14;
+            --bg-2: #111827;
+            --bg-3: #1a2236;
+            --bg-hover: #1e293b;
+            --border: #1e293b;
+            --border-dim: #151d2e;
+            --text-0: #f8fafc;
+            --text-1: #e2e8f0;
+            --text-2: #94a3b8;
+            --text-3: #64748b;
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --purple: #a78bfa;
+            --green-bg: rgba(16,185,129,.08);
+            --red-bg: rgba(239,68,68,.08);
+            --blue-bg: rgba(59,130,246,.08);
+            --purple-bg: rgba(167,139,250,.08);
+            --amber-bg: rgba(245,158,11,.08);
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: var(--sans); background: var(--bg-0); color: var(--text-1); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+        /* ─── Topbar ─── */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 52px;
+            background: rgba(5,7,10,.85); backdrop-filter: blur(12px) saturate(1.4);
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 14px; }
+        .brand {
+            font-family: var(--mono); font-weight: 800; font-size: 18px; letter-spacing: 3px;
+            background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 50%, #10b981 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; text-transform: uppercase; font-family: var(--mono);
+        }
+        .chip-service { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+        .chip-version { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(59,130,246,.2); }
+        .chip-env { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .topbar-time { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+        .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); position: relative; }
+        .pulse::after { content:''; position:absolute; top:-3px; left:-3px; width:13px; height:13px; border-radius:50%; border:1.5px solid var(--green); animation: pulse-ring 2s ease-out infinite; }
+        @keyframes pulse-ring { 0%{opacity:.8;transform:scale(.8)} 100%{opacity:0;transform:scale(1.6)} }
+
+        /* ─── Layout ─── */
+        .shell { max-width: 1440px; margin: 0 auto; padding: 20px 24px 40px; }
+
+        /* ─── Quick Actions ─── */
+        .actions { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .act-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: var(--sans);
+            border-radius: 6px; border: 1px solid var(--border); background: var(--bg-2);
+            color: var(--text-2); cursor: pointer; transition: all .15s;
+            text-decoration: none;
+        }
+        .act-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+        .act-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+        .act-btn.primary:hover { background: #2563eb; }
+        .act-btn.danger { border-color: rgba(239,68,68,.3); color: var(--red); }
+        .act-btn.danger:hover { background: var(--red-bg); }
+        .act-btn.success { border-color: rgba(16,185,129,.3); color: var(--green); }
+        .act-btn.success:hover { background: var(--green-bg); }
+        .act-btn.purple { border-color: rgba(167,139,250,.3); color: var(--purple); }
+        .act-btn.purple:hover { background: var(--purple-bg); }
+
+        /* ─── KPI Strip ─── */
+        .kpi-strip {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;
+        }
+        .kpi {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px 16px; position: relative; overflow: hidden;
+        }
+        .kpi::before {
+            content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: .4;
+        }
+        .kpi-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .kpi-value { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--text-0); line-height: 1; }
+        .kpi-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; font-family: var(--mono); }
+
+        /* ─── Panels ─── */
+        .panel {
+            background: var(--bg-1); border: 1px solid var(--border-dim); border-radius: 10px;
+            overflow: hidden; margin-bottom: 16px;
+        }
+        .panel-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 20px; border-bottom: 1px solid var(--border-dim);
+        }
+        .panel-title { font-size: 13px; font-weight: 600; color: var(--text-1); display: flex; align-items: center; gap: 8px; }
+        .panel-title .dot { width:6px; height:6px; border-radius:50%; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 600;
+            color: var(--text-3); text-transform: uppercase; letter-spacing: .8px;
+            background: var(--bg-0); border-bottom: 1px solid var(--border-dim);
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border-dim);
+            vertical-align: middle; transition: background .1s;
+        }
+        tbody tr:hover td { background: var(--bg-hover); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .asset-cell { display: flex; align-items: center; gap: 10px; }
+        .asset-icon {
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 11px; font-family: var(--mono); color: #fff;
+        }
+        .asset-icon.stable { background: linear-gradient(135deg, #26a17b, #1e8a69); }
+        .asset-icon.altcoin { background: linear-gradient(135deg, var(--blue), var(--cyan)); }
+        .asset-icon.utility { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+        .asset-icon.partner { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .asset-icon.meme { background: linear-gradient(135deg, #f472b6, #ec4899); }
+        .asset-icon.default { background: linear-gradient(135deg, var(--blue), var(--cyan)); }
+
+        .asset-name { font-weight: 700; font-size: 14px; color: var(--text-0); }
+        .asset-full { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+        .price-cell { font-family: var(--mono); font-weight: 600; font-size: 15px; color: var(--text-0); }
+
+        .model-pill {
+            font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 3px 8px;
+            border-radius: 3px; text-transform: uppercase;
+        }
+        .model-MANUAL { background: var(--blue-bg); color: var(--blue); }
+        .model-PEGGED { background: var(--green-bg); color: var(--green); }
+        .model-SIMULATED { background: var(--purple-bg); color: var(--purple); }
+        .model-INTERNAL { background: var(--amber-bg); color: var(--amber); }
+
+        .cat-pill {
+            font-family: var(--mono); font-size: 9px; font-weight: 600; padding: 2px 7px;
+            border-radius: 3px; text-transform: uppercase;
+        }
+        .cat-STABLE { background: var(--green-bg); color: var(--green); }
+        .cat-ALTCOIN { background: var(--blue-bg); color: var(--blue); }
+        .cat-UTILITY { background: var(--purple-bg); color: var(--purple); }
+        .cat-PARTNER { background: var(--amber-bg); color: var(--amber); }
+        .cat-MEME { background: rgba(236,72,153,.08); color: #ec4899; }
+
+        .change-pos { color: var(--green); }
+        .change-neg { color: var(--red); }
+        .change-zero { color: var(--text-3); }
+
+        .vol-cell { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+
+        .age-cell { font-family: var(--mono); font-size: 11px; font-weight: 500; }
+        .age-fresh { color: var(--green); }
+        .age-warm { color: var(--amber); }
+        .age-stale { color: var(--red); }
+
+        .source-tag {
+            font-family: var(--mono); font-size: 9px; font-weight: 500; padding: 2px 7px;
+            border-radius: 3px; white-space: nowrap;
+        }
+        .source-ADMIN { background: var(--blue-bg); color: var(--blue); }
+        .source-PEG_SYNC { background: var(--green-bg); color: var(--green); }
+        .source-SIMULATION { background: var(--purple-bg); color: var(--purple); }
+        .source-INTERNAL { background: var(--amber-bg); color: var(--amber); }
+        .source-SCHEDULED { background: rgba(100,116,139,.1); color: var(--text-3); }
+
+        /* ─── Exchange Prices ─── */
+        .buy-price { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--green); }
+        .sell-price { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--red); }
+        .spread-cell { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+        .spread-pos { color: var(--green); }
+        .spread-neg { color: var(--red); }
+        .margin-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px; background: rgba(34,211,238,.08); color: var(--cyan);
+        }
+        .alert-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px; text-transform: uppercase;
+        }
+        .alert-SAFE { background: var(--green-bg); color: var(--green); }
+        .alert-WARNING { background: var(--amber-bg); color: var(--amber); }
+        .alert-DANGER { background: var(--red-bg); color: var(--red); }
+        .alert-BLOCKED { background: rgba(239,68,68,.15); color: var(--red); font-weight: 800; }
+        .mode-pill {
+            display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 3px;
+        }
+        .mode-MANUAL { background: var(--blue-bg); color: var(--blue); }
+        .mode-AUTO { background: var(--purple-bg); color: var(--purple); }
+
+        /* ─── Band Cards ─── */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; padding: 16px; }
+        .band-card {
+            background: var(--bg-0); border: 1px solid var(--border-dim); border-radius: 8px;
+            padding: 14px; transition: border-color .15s; position: relative; overflow: hidden;
+        }
+        .band-card:hover { border-color: var(--border); }
+        .band-card::before { content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+        .band-card.alert-border-SAFE::before { background: var(--green); opacity: .5; }
+        .band-card.alert-border-WARNING::before { background: var(--amber); opacity: .6; }
+        .band-card.alert-border-DANGER::before { background: var(--red); opacity: .7; }
+        .band-card.alert-border-BLOCKED::before { background: var(--red); opacity: 1; }
+        .band-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .band-asset { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+        .band-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+        .band-row .val { font-family: var(--mono); font-weight: 500; color: var(--text-2); }
+        .band-divider { border: none; border-top: 1px solid var(--border-dim); margin: 8px 0; }
+        .entropy-bar { height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+        .entropy-fill { height: 100%; border-radius: 2px; transition: width .6s; }
+        .entropy-LOW { background: var(--green); }
+        .entropy-MEDIUM { background: var(--amber); }
+        .entropy-HIGH { background: var(--red); }
+        .entropy-EXTREME { background: #dc2626; }
+
+        /* ─── Create Token Modal ─── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 28px; width: 560px; max-width: 90vw; max-height: 85vh; overflow-y: auto;
+        }
+        .modal h2 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .modal p { font-size: 13px; color: var(--text-2); margin-bottom: 16px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
+        .form-input, .form-select {
+            padding: 8px 12px; font-family: var(--mono); font-size: 13px;
+            background: var(--bg-0); border: 1px solid var(--border); border-radius: 6px;
+            color: var(--text-0); outline: none; transition: border-color .15s;
+        }
+        .form-input:focus, .form-select:focus { border-color: var(--blue); }
+        .form-select { cursor: pointer; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+        /* ─── Empty ─── */
+        .empty { padding: 48px 20px; text-align: center; }
+        .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: .6; }
+        .empty-text { font-size: 14px; color: var(--text-3); }
+        .empty-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; opacity: .7; }
+
+        /* ─── Auth Screen ─── */
+        .auth-overlay {
+            position: fixed; inset: 0; z-index: 300;
+            background: var(--bg-0);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .auth-overlay.hidden { display: none; }
+        .auth-box {
+            background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px;
+            padding: 36px 40px; width: 420px; max-width: 90vw; text-align: center;
+        }
+        .auth-logo {
+            font-family: var(--mono); font-weight: 800; font-size: 28px; letter-spacing: 4px;
+            background: linear-gradient(135deg, #3b82f6 0%, #22d3ee 50%, #10b981 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .auth-subtitle { font-size: 12px; color: var(--text-3); margin-bottom: 24px; font-family: var(--mono); }
+        .auth-label { font-size: 12px; color: var(--text-2); text-align: left; margin-bottom: 6px; display: block; }
+        .auth-input {
+            width: 100%; padding: 10px 14px; font-family: var(--mono); font-size: 14px;
+            background: var(--bg-0); border: 1px solid var(--border); border-radius: 8px;
+            color: var(--text-0); outline: none; transition: border-color .15s;
+        }
+        .auth-input:focus { border-color: var(--blue); }
+        .auth-input::placeholder { color: var(--text-3); }
+        .auth-hint { font-size: 10px; color: var(--text-3); margin-top: 6px; text-align: left; font-family: var(--mono); }
+        .auth-btn {
+            margin-top: 18px; width: 100%; padding: 10px; font-size: 13px; font-weight: 600;
+            font-family: var(--sans); border: none; border-radius: 8px; cursor: pointer;
+            background: var(--blue); color: #fff; transition: background .15s;
+        }
+        .auth-btn:hover { background: #2563eb; }
+        .auth-error {
+            margin-top: 12px; font-size: 11px; color: var(--red); font-family: var(--mono);
+            display: none;
+        }
+        .auth-error.show { display: block; }
+        .auth-skip {
+            margin-top: 12px; font-size: 11px; color: var(--text-3); cursor: pointer;
+            text-decoration: underline; background: none; border: none; font-family: var(--mono);
+        }
+        .auth-skip:hover { color: var(--text-2); }
+
+        /* ─── Connection ─── */
+        .conn-chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+            letter-spacing: .5px; font-family: var(--mono); display: inline-flex;
+            align-items: center; gap: 5px; transition: all .3s;
+        }
+        .conn-chip .conn-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .conn-connected { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,.2); }
+        .conn-connected .conn-dot { background: var(--green); }
+        .conn-disconnected { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+        .conn-disconnected .conn-dot { background: var(--red); }
+        .conn-checking { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(245,158,11,.2); }
+        .conn-checking .conn-dot { background: var(--amber); animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center; padding: 20px; font-size: 11px; color: var(--text-3);
+            border-top: 1px solid var(--border-dim); font-family: var(--mono); letter-spacing: .5px;
+        }
+
+        /* ─── Toast ─── */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 400;
+            padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500;
+            font-family: var(--sans); display: none; animation: fadeIn .3s ease-out;
+            border: 1px solid var(--border);
+        }
+        .toast.show { display: block; }
+        .toast.success { background: rgba(16,185,129,.15); color: var(--green); border-color: rgba(16,185,129,.3); }
+        .toast.error { background: rgba(239,68,68,.15); color: var(--red); border-color: rgba(239,68,68,.3); }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) {
+            .shell { padding: 12px; }
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: 1fr; }
+            th, td { padding: 8px 10px; font-size: 11px; }
+            .topbar { padding: 0 12px; }
+            .brand { font-size: 14px; letter-spacing: 2px; }
+            .chip { font-size: 8px; padding: 2px 6px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+        .fade-in { animation: fadeIn .3s ease-out; }
+        .price-flash { animation: priceFlash .5s ease; }
+        @keyframes priceFlash { 0%{background:rgba(59,130,246,.15)} 100%{background:transparent} }
+    </style>
+</head>
+<body>
+
+<!-- ─── Topbar ─── -->
+<div class="topbar">
+    <div class="topbar-left">
+        <span class="brand">DECO31416</span>
+        <span class="chip chip-service">launchpad pricing</span>
+        <span class="chip chip-version">v3.0.0</span>
+        <span class="chip chip-env" id="envChip">development</span>
+        <span class="conn-chip conn-checking" id="connChip"><span class="conn-dot"></span> checking...</span>
+    </div>
+    <div class="topbar-right">
+        <span class="topbar-time" id="clock"></span>
+        <span class="pulse" id="pulseIndicator"></span>
+    </div>
+</div>
+
+<!-- ─── Shell ─── -->
+<div class="shell">
+
+    <!-- Actions -->
+    <div class="actions">
+        <a class="act-btn" href="/api/docs" target="_blank">📚 Swagger</a>
+        <a class="act-btn" href="/api/v1/health" target="_blank">💊 Health</a>
+        <button class="act-btn primary" onclick="openCreateModal()">➕ Add Token</button>
+        <button class="act-btn success" onclick="triggerPegSync()">🔗 Peg Sync All</button>
+        <button class="act-btn purple" onclick="restartSimulations()">🎰 Restart Simulations</button>
+        <button class="act-btn" onclick="fetchAll()">⟳ Refresh</button>
+        <button class="act-btn danger" onclick="clearToken()">🔑 Reset Token</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-strip">
+        <div class="kpi">
+            <div class="kpi-label">Tokens Listed</div>
+            <div class="kpi-value" id="kpiTokens">—</div>
+            <div class="kpi-sub" id="kpiTokensSub"></div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Pricing Models</div>
+            <div class="kpi-value" id="kpiModels" style="font-size:14px">—</div>
+            <div class="kpi-sub" id="kpiModelsSub"></div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Peg Sync</div>
+            <div class="kpi-value" id="kpiPeg">—</div>
+            <div class="kpi-sub" id="kpiPegSub">pegged tokens</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Simulation</div>
+            <div class="kpi-value" id="kpiSim">—</div>
+            <div class="kpi-sub" id="kpiSimSub">simulated tokens</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Uptime</div>
+            <div class="kpi-value" id="kpiUptime">—</div>
+            <div class="kpi-sub">since start</div>
+        </div>
+    </div>
+
+    <!-- ─── Token Table ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--green)"></span> Custom Tokens</div>
+            <span class="topbar-time" id="refreshTimer"></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Category</th>
+                    <th>Model</th>
+                    <th style="text-align:right">Base Price</th>
+                    <th>Source</th>
+                    <th style="text-align:right">24h Change</th>
+                    <th style="text-align:right">Market Cap</th>
+                    <th style="text-align:right">Last Update</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tokenBody">
+                <tr><td colspan="9"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ─── Exchange Prices (BUY / SELL) ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--cyan)"></span> Exchange Prices — BUY / SELL</div>
+            <div style="display:flex;flex-direction:column;gap:2px;font-size:10px;font-family:var(--mono);letter-spacing:.3px">
+                <div style="display:flex;gap:16px">
+                    <span style="color:var(--text-3)">🟢 <b style="color:var(--green)">BUY</b> = usuario compra</span>
+                    <span style="color:var(--text-3)">🔴 <b style="color:var(--red)">SELL</b> = usuario vende</span>
+                </div>
+                <div style="display:flex;gap:16px;opacity:.7">
+                    <span style="color:var(--text-3)">🔴 <b style="color:var(--red)">SELL</b> = Broker vende al usuario</span>
+                    <span style="color:var(--text-3)">🟢 <b style="color:var(--green)">BUY</b> = Broker compra del usuario</span>
+                    <span style="color:var(--text-3)">🔵 <b style="color:var(--text-2)">Internal</b> = precio base</span>
+                </div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th style="text-align:right">Internal Price</th>
+                    <th style="text-align:right">Buy Spread</th>
+                    <th style="text-align:right">🟢 User BUY</th>
+                    <th style="text-align:right">Sell Spread</th>
+                    <th style="text-align:right">🔴 User SELL</th>
+                    <th style="text-align:center">Exchange Margin</th>
+                    <th style="text-align:center">Alert</th>
+                    <th style="text-align:center">Mode</th>
+                </tr>
+            </thead>
+            <tbody id="exchangeBody">
+                <tr><td colspan="9"><div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading...</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ─── Price Bands & Entropy ─── -->
+    <div class="panel">
+        <div class="panel-head">
+            <div class="panel-title"><span class="dot" style="background:var(--purple)"></span> Price Bands & Entropy</div>
+            <span style="font-size:10px;color:var(--text-3);font-family:var(--mono)">Spreads, límites legales, modo y motor de entropía</span>
+        </div>
+        <div class="grid-3" id="bandsGrid">
+            <div class="empty"><div class="empty-icon">⏳</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Create Token Modal ─── -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal fade-in">
+        <h2>➕ Register New Token</h2>
+        <p>Define un token custom del launchpad con su modelo de pricing, configuración de peg o simulación.</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Token Code</label>
+                <input class="form-input" id="fTokenCode" placeholder="DECOX-USD" style="text-transform:uppercase">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input class="form-input" id="fName" placeholder="DECOX Dollar">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Pricing Model</label>
+                <select class="form-select" id="fModel" onchange="onModelChange()">
+                    <option value="MANUAL">MANUAL — Admin sets price</option>
+                    <option value="PEGGED">PEGGED — Follows reference asset</option>
+                    <option value="SIMULATED">SIMULATED — Random walk algorithm</option>
+                    <option value="INTERNAL">INTERNAL — Order engine (future)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select class="form-select" id="fCategory">
+                    <option value="STABLE">STABLE</option>
+                    <option value="ALTCOIN" selected>ALTCOIN</option>
+                    <option value="UTILITY">UTILITY</option>
+                    <option value="PARTNER">PARTNER</option>
+                    <option value="MEME">MEME</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Initial Price (USD)</label>
+                <input class="form-input" id="fPrice" type="number" step="0.000001" value="1.00">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Floor / Ceiling</label>
+                <div style="display:flex;gap:6px">
+                    <input class="form-input" id="fFloor" type="number" step="0.01" placeholder="Floor" style="width:50%">
+                    <input class="form-input" id="fCeiling" type="number" step="0.01" placeholder="Ceiling" style="width:50%">
+                </div>
+            </div>
+        </div>
+
+        <!-- Peg Config (shown when PEGGED) -->
+        <div id="pegSection" style="display:none">
+            <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:8px;font-family:var(--mono)">🔗 PEG CONFIGURATION</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Peg Type</label>
+                    <select class="form-select" id="fPegType">
+                        <option value="USD">USD</option>
+                        <option value="USDT">USDT</option>
+                        <option value="USDC">USDC</option>
+                        <option value="BTC">BTC</option>
+                        <option value="ETH">ETH</option>
+                        <option value="BNB">BNB</option>
+                        <option value="EUR">EUR</option>
+                        <option value="CUSTOM">CUSTOM (another token)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Peg Ratio</label>
+                    <input class="form-input" id="fPegRatio" type="number" step="0.000001" value="1.0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulation Config (shown when SIMULATED) -->
+        <div id="simSection" style="display:none">
+            <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:8px;font-family:var(--mono)">🎰 SIMULATION CONFIGURATION</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Trend</label>
+                    <select class="form-select" id="fSimTrend">
+                        <option value="SIDEWAYS" selected>SIDEWAYS</option>
+                        <option value="BULLISH">BULLISH</option>
+                        <option value="BEARISH">BEARISH</option>
+                        <option value="VOLATILE">VOLATILE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Daily Drift %</label>
+                    <input class="form-input" id="fSimDrift" type="number" step="0.1" value="0.5">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Volatility %</label>
+                    <input class="form-input" id="fSimVol" type="number" step="0.1" value="3.0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tick Interval (ms)</label>
+                    <input class="form-input" id="fSimTick" type="number" value="300000">
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="act-btn" onclick="closeCreateModal()">Cancel</button>
+            <button class="act-btn primary" onclick="submitToken()">Create Token</button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Auth Overlay ─── -->
+<div class="auth-overlay" id="authOverlay">
+    <div class="auth-box fade-in">
+        <div class="auth-logo">DECO31416</div>
+        <div class="auth-subtitle">launchpad pricing · dev dashboard</div>
+        <label class="auth-label">x-internal-auth token</label>
+        <input type="password" class="auth-input" id="authInput" placeholder="Ingresa tu token (ej: dev)" autocomplete="off">
+        <div class="auth-hint">💡 El token está en tu .env.local → INTERNAL_AUTH_TOKEN</div>
+        <div class="auth-error" id="authError">❌ Token inválido — el servidor rechazó la conexión</div>
+        <button class="auth-btn" id="authBtn" onclick="submitAuth()">Conectar</button>
+        <button class="auth-skip" onclick="skipAuth()">Continuar sin token (solo lectura pública)</button>
+    </div>
+</div>
+
+<!-- ─── Toast ─── -->
+<div class="toast" id="toast"></div>
+
+<!-- ─── Footer ─── -->
+<div class="footer">
+    DECO EXCHANGE &nbsp;·&nbsp; launchpad-pricing v3.0.0 &nbsp;·&nbsp; dev dashboard &nbsp;·&nbsp; not available in production
+</div>
+
+<script>
+// ─── Constants ──────────────────────────────────────────────
+const BASE = window.location.origin + '/api/v1';
+const REFRESH_MS = 30_000;
+let startTime = Date.now();
+let prevPrices = {};
+
+// ─── Auth Token ─────────────────────────────────────────────
+let AUTH = localStorage.getItem('deco_auth') || '';
+let hdrs = { 'x-internal-auth': AUTH, 'Content-Type': 'application/json' };
+
+function clearToken() {
+    localStorage.removeItem('deco_auth');
+    location.reload();
+}
+
+function updateConnStatus(status) {
+    const chip = $('connChip');
+    chip.className = 'conn-chip';
+    if (status === 'connected') {
+        chip.className += ' conn-connected';
+        chip.innerHTML = '<span class="conn-dot"></span> connected';
+    } else if (status === 'disconnected') {
+        chip.className += ' conn-disconnected';
+        chip.innerHTML = '<span class="conn-dot"></span> disconnected';
+    } else {
+        chip.className += ' conn-checking';
+        chip.innerHTML = '<span class="conn-dot"></span> checking...';
+    }
+}
+
+async function testConnection() {
+    updateConnStatus('checking');
+    try {
+        const r = await fetch(BASE + '/health', { headers: hdrs });
+        if (r.ok) { updateConnStatus('connected'); return true; }
+        if (r.status === 401) { updateConnStatus('disconnected'); return false; }
+        updateConnStatus('connected');
+        return true;
+    } catch {
+        updateConnStatus('disconnected');
+        return false;
+    }
+}
+
+async function submitAuth() {
+    const input = $('authInput');
+    AUTH = input.value.trim();
+    hdrs = { 'x-internal-auth': AUTH, 'Content-Type': 'application/json' };
+    $('authBtn').textContent = 'Conectando...';
+    const ok = await testConnection();
+    if (ok) {
+        if (AUTH) localStorage.setItem('deco_auth', AUTH);
+        $('authOverlay').classList.add('hidden');
+        fetchAll();
+    } else {
+        $('authError').classList.add('show');
+        $('authBtn').textContent = 'Conectar';
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => { input.style.borderColor = ''; }, 2000);
+    }
+}
+
+function skipAuth() {
+    AUTH = '';
+    hdrs = { 'Content-Type': 'application/json' };
+    $('authOverlay').classList.add('hidden');
+    testConnection();
+    fetchAll();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    $('authInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitAuth(); });
+});
+
+if (AUTH) {
+    (async () => {
+        const ok = await testConnection();
+        if (ok) { $('authOverlay').classList.add('hidden'); fetchAll(); }
+        else { $('authOverlay').classList.remove('hidden'); $('authInput').value = AUTH; }
+    })();
+}
+
+// ─── Fetch Wrapper ──────────────────────────────────────────
+async function api(path, opts = {}) {
+    try {
+        const r = await fetch(BASE + path, { headers: hdrs, ...opts });
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+    } catch (e) { console.warn('API', path, e.message); return null; }
+}
+
+// ─── Toast ──────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+    const t = $('toast');
+    t.textContent = msg;
+    t.className = `toast show ${type}`;
+    setTimeout(() => { t.classList.remove('show'); }, 3500);
+}
+
+// ─── Formatters ─────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+
+function fUsd(n) {
+    if (n == null) return '—';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (n >= 1) return '$' + n.toFixed(4);
+    return '$' + n.toFixed(6);
+}
+function fChange(n) {
+    if (n == null || n === 0) return '<span class="change-zero">— 0.00%</span>';
+    const c = n > 0 ? 'change-pos' : 'change-neg';
+    const a = n > 0 ? '▲' : '▼';
+    return `<span class="${c}">${a} ${Math.abs(n).toFixed(2)}%</span>`;
+}
+function fVol(n) {
+    if (!n) return '<span class="vol-cell">—</span>';
+    let s;
+    if (n >= 1e12) s = (n/1e12).toFixed(2) + 'T';
+    else if (n >= 1e9) s = (n/1e9).toFixed(2) + 'B';
+    else if (n >= 1e6) s = (n/1e6).toFixed(2) + 'M';
+    else if (n >= 1e3) s = (n/1e3).toFixed(1) + 'K';
+    else s = n.toFixed(0);
+    return `<span class="vol-cell">$${s}</span>`;
+}
+function fAge(d) {
+    if (!d) return '<span class="age-cell age-stale">—</span>';
+    const ms = Date.now() - new Date(d).getTime();
+    const s = Math.floor(ms/1000), m = Math.floor(s/60);
+    let text, cls;
+    if (m < 2) { text = s + 's'; cls = 'age-fresh'; }
+    else if (m < 10) { text = m + 'm'; cls = 'age-warm'; }
+    else { text = m + 'm'; cls = 'age-stale'; }
+    return `<span class="age-cell ${cls}">${text}</span>`;
+}
+
+// ─── Clock / Uptime ─────────────────────────────────────────
+function tickClock() {
+    const now = new Date();
+    $('clock').textContent = now.toLocaleTimeString() + ' · ' + now.toLocaleDateString();
+    const up = Math.floor((Date.now() - startTime) / 1000);
+    const h = Math.floor(up/3600), m = Math.floor((up%3600)/60), s = up%60;
+    $('kpiUptime').textContent = (h ? h+'h ':'') + m + 'm ' + s + 's';
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ─── Render: Tokens ─────────────────────────────────────────
+async function renderTokens() {
+    const tokens = await api('/internal/custom-tokens');
+    const tickers = await api('/internal/custom-tokens/tickers/all-latest');
+    const tb = $('tokenBody');
+
+    if (!tokens || !tokens.length) {
+        tb.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">🪙</div><div class="empty-text">No tokens registered</div><div class="empty-sub">Click "Add Token" to register your first launchpad token</div></div></td></tr>`;
+        $('kpiTokens').textContent = '0';
+        $('kpiTokensSub').textContent = '';
+        $('kpiModels').textContent = '—';
+        $('kpiPeg').textContent = '0';
+        $('kpiSim').textContent = '0';
+        return;
+    }
+
+    // KPIs
+    const enabled = tokens.filter(t => t.enabled).length;
+    $('kpiTokens').textContent = tokens.length;
+    $('kpiTokensSub').textContent = `${enabled} enabled`;
+
+    const models = {};
+    let pegged = 0, simulated = 0;
+    for (const t of tokens) {
+        models[t.pricingModel] = (models[t.pricingModel] || 0) + 1;
+        if (t.pricingModel === 'PEGGED' && t.enabled) pegged++;
+        if (t.pricingModel === 'SIMULATED' && t.enabled) simulated++;
+    }
+    $('kpiModels').textContent = Object.entries(models).map(([k,v]) => `${k}:${v}`).join(' · ');
+    $('kpiPeg').textContent = pegged;
+    $('kpiSim').textContent = simulated;
+
+    // Ticker map
+    const tickerMap = {};
+    if (tickers) for (const t of tickers) tickerMap[t.tokenCode] = t;
+
+    let html = '';
+    for (const t of tokens) {
+        const iconCls = (t.category || 'altcoin').toLowerCase();
+        const ticker = tickerMap[t.tokenCode];
+        const flash = prevPrices[t.tokenCode] && prevPrices[t.tokenCode] !== t.currentPriceUsd ? ' price-flash' : '';
+        prevPrices[t.tokenCode] = t.currentPriceUsd;
+
+        html += `<tr class="fade-in${flash}">
+            <td><div class="asset-cell">
+                <div class="asset-icon ${iconCls}">${t.tokenCode.slice(0,2)}</div>
+                <div><div class="asset-name">${t.tokenCode}</div><div class="asset-full">${t.name}</div></div>
+            </div></td>
+            <td><span class="cat-pill cat-${t.category}">${t.category}</span></td>
+            <td><span class="model-pill model-${t.pricingModel}">${t.pricingModel}</span></td>
+            <td style="text-align:right" class="price-cell">${fUsd(t.currentPriceUsd)}</td>
+            <td><span class="source-tag source-${ticker?.source || 'ADMIN'}">${ticker?.source || '—'}</span></td>
+            <td style="text-align:right">${fChange(ticker?.priceChange24h)}</td>
+            <td style="text-align:right">${fVol(ticker?.marketCap)}</td>
+            <td style="text-align:right">${fAge(t.lastPriceUpdateAt)}</td>
+            <td>${t.enabled
+                ? '<span class="cat-pill cat-STABLE">active</span>'
+                : '<span class="cat-pill cat-MEME">delisted</span>'}</td>
+        </tr>`;
+    }
+    tb.innerHTML = html;
+}
+
+// ─── Render: Exchange Prices ────────────────────────────────
+async function renderExchangePrices() {
+    const bands = await api('/internal/price-bands');
+    const tokens = await api('/internal/custom-tokens?enabled=true');
+    const tb = $('exchangeBody');
+
+    if (!bands || !bands.length || !tokens || !tokens.length) {
+        tb.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">💱</div><div class="empty-text">No price bands configured</div><div class="empty-sub">Create price bands via API to see BUY/SELL prices</div></div></td></tr>`;
+        return;
+    }
+
+    const tokenMap = {};
+    for (const t of tokens) tokenMap[t.tokenCode] = t;
+    bands.sort((a, b) => a.assetCode.localeCompare(b.assetCode));
+
+    let html = '';
+    for (const b of bands) {
+        if (!b.enabled) continue;
+        const t = tokenMap[b.assetCode];
+        if (!t) continue;
+        const base = t.currentPriceUsd;
+        const buySpread = b.effectiveSellSpread ?? b.sellSpreadPercentage ?? 0;
+        const sellSpread = b.effectiveBuySpread ?? b.buySpreadPercentage ?? 0;
+        const buyPrice = base * (1 + buySpread / 100);
+        const sellPrice = base * (1 + sellSpread / 100);
+        const marginPct = (((buyPrice - sellPrice) / base) * 100).toFixed(2);
+        const profitUsd = (buyPrice - sellPrice).toFixed(4);
+        const iconCls = (t.category || 'altcoin').toLowerCase();
+
+        html += `<tr class="fade-in">
+            <td><div class="asset-cell">
+                <div class="asset-icon ${iconCls}">${b.assetCode.slice(0,2)}</div>
+                <div><div class="asset-name">${b.assetCode}</div><div class="asset-full">${t.name || ''}</div></div>
+            </div></td>
+            <td style="text-align:right"><span class="price-cell" style="color:var(--blue)">${fUsd(base)}</span></td>
+            <td style="text-align:right"><span class="spread-cell spread-pos">+${buySpread.toFixed(2)}%</span></td>
+            <td style="text-align:right"><span class="buy-price">${fUsd(buyPrice)}</span></td>
+            <td style="text-align:right"><span class="spread-cell spread-neg">${sellSpread.toFixed(2)}%</span></td>
+            <td style="text-align:right"><span class="sell-price">${fUsd(sellPrice)}</span></td>
+            <td style="text-align:center"><span class="margin-pill">${marginPct}% · $${profitUsd}</span></td>
+            <td style="text-align:center"><span class="alert-pill alert-${b.alertLevel}">${b.alertLevel}</span></td>
+            <td style="text-align:center"><span class="mode-pill mode-${b.mode}">${b.mode}</span></td>
+        </tr>`;
+    }
+    tb.innerHTML = html || `<tr><td colspan="9"><div class="empty"><div class="empty-text">No active bands match enabled tokens</div></div></td></tr>`;
+}
+
+// ─── Render: Price Bands ────────────────────────────────────
+async function renderBands() {
+    const bands = await api('/internal/price-bands');
+    const tokens = await api('/internal/custom-tokens?enabled=true');
+    const g = $('bandsGrid');
+
+    if (!bands || !bands.length) {
+        g.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🎚️</div><div class="empty-text">No price bands</div><div class="empty-sub">Create via POST /api/v1/internal/price-bands</div></div>`;
+        return;
+    }
+
+    const tokenMap = {};
+    if (tokens) for (const t of tokens) tokenMap[t.tokenCode] = t;
+    bands.sort((a, b) => a.assetCode.localeCompare(b.assetCode));
+
+    let html = '';
+    for (const b of bands) {
+        const e = b.entropy || {};
+        const eScore = e.score ?? 0;
+        const eLevel = e.level || 'LOW';
+        const ePct = Math.min(eScore * 100, 100).toFixed(0);
+
+        const t = tokenMap[b.assetCode];
+        const base = t ? t.currentPriceUsd : null;
+        const sellSpread = b.effectiveSellSpread ?? b.sellSpreadPercentage ?? 0;
+        const buySpread = b.effectiveBuySpread ?? b.buySpreadPercentage ?? 0;
+        const userBuy = base ? base * (1 + sellSpread / 100) : null;
+        const userSell = base ? base * (1 + buySpread / 100) : null;
+
+        html += `<div class="band-card alert-border-${b.alertLevel}">
+            <div class="band-header">
+                <span class="band-asset">${b.assetCode}${b.networkCode ? ' / ' + b.networkCode : ''}</span>
+                <div style="display:flex;gap:4px">
+                    <span class="mode-pill mode-${b.mode}">${b.mode}</span>
+                    <span class="alert-pill alert-${b.alertLevel}">${b.alertLevel}</span>
+                </div>
+            </div>
+            ${base ? `<div style="background:var(--bg-2);border-radius:6px;padding:10px;margin-bottom:10px">
+                <div class="band-row"><span class="label" style="color:var(--blue)">🔵 Internal</span><span class="val" style="color:var(--blue);font-weight:700;font-size:13px">${fUsd(base)}</span></div>
+                <div class="band-row"><span class="label" style="color:var(--green)">🟢 User BUY</span><span class="val" style="color:var(--green);font-weight:700;font-size:13px">${fUsd(userBuy)}</span></div>
+                <div class="band-row"><span class="label" style="color:var(--red)">🔴 User SELL</span><span class="val" style="color:var(--red);font-weight:700;font-size:13px">${fUsd(userSell)}</span></div>
+            </div>` : ''}
+            <div class="band-row"><span class="label">Effective Buy</span><span class="val" style="color:var(--red)">${buySpread}%</span></div>
+            <div class="band-row"><span class="label">Effective Sell</span><span class="val" style="color:var(--green)">+${sellSpread}%</span></div>
+            <div class="band-row"><span class="label">Manual Buy / Sell</span><span class="val">${b.buySpreadPercentage}% / +${b.sellSpreadPercentage}%</span></div>
+            <hr class="band-divider">
+            <div class="band-row"><span class="label">Legal Limits</span><span class="val">-${b.legalMaxLowerPercentage}% / +${b.legalMaxUpperPercentage}%</span></div>
+            <hr class="band-divider">
+            <div class="band-row"><span class="label">Entropy</span><span class="val">${eScore.toFixed(4)} (${eLevel})</span></div>
+            <div class="entropy-bar"><div class="entropy-fill entropy-${eLevel}" style="width:${ePct}%"></div></div>
+            <div class="band-row" style="margin-top:4px"><span class="label">Entropy Rec</span><span class="val">${e.recommendedBuySpread ?? '—'}% / +${e.recommendedSellSpread ?? '—'}%</span></div>
+            ${b.alertMessage ? `<div style="font-size:10px;color:var(--text-3);margin-top:6px;font-family:var(--mono)">${b.alertMessage}</div>` : ''}
+        </div>`;
+    }
+    g.innerHTML = html;
+}
+
+// ─── Create Token Modal ─────────────────────────────────────
+function openCreateModal() { $('createModal').classList.add('open'); }
+function closeCreateModal() { $('createModal').classList.remove('open'); }
+
+function onModelChange() {
+    const model = $('fModel').value;
+    $('pegSection').style.display = model === 'PEGGED' ? 'block' : 'none';
+    $('simSection').style.display = model === 'SIMULATED' ? 'block' : 'none';
+}
+
+async function submitToken() {
+    const model = $('fModel').value;
+    const body = {
+        tokenCode: $('fTokenCode').value.trim().toUpperCase(),
+        name: $('fName').value.trim(),
+        pricingModel: model,
+        category: $('fCategory').value,
+        currentPriceUsd: parseFloat($('fPrice').value) || 1,
+        priceFloorUsd: parseFloat($('fFloor').value) || 0,
+        priceCeilingUsd: parseFloat($('fCeiling').value) || 0,
+        createdBy: 'dashboard-admin',
+    };
+
+    if (model === 'PEGGED') {
+        body.pegConfig = {
+            pegType: $('fPegType').value,
+            pegRatio: parseFloat($('fPegRatio').value) || 1,
+            autoSync: true,
+        };
+    }
+    if (model === 'SIMULATED') {
+        body.simulationConfig = {
+            trend: $('fSimTrend').value,
+            dailyDriftPct: parseFloat($('fSimDrift').value) || 0.5,
+            volatilityPct: parseFloat($('fSimVol').value) || 3,
+            tickIntervalMs: parseInt($('fSimTick').value) || 300000,
+            enabled: true,
+        };
+    }
+
+    if (!body.tokenCode || !body.name) {
+        showToast('Token code and name are required', 'error');
+        return;
+    }
+
+    const result = await api('/internal/custom-tokens', {
+        method: 'POST',
+        body: JSON.stringify(body),
+    });
+
+    if (result) {
+        showToast(`✅ Token ${body.tokenCode} created!`);
+        closeCreateModal();
+        // Clear form
+        $('fTokenCode').value = '';
+        $('fName').value = '';
+        $('fPrice').value = '1.00';
+        $('fFloor').value = '';
+        $('fCeiling').value = '';
+        setTimeout(fetchAll, 1000);
+    } else {
+        showToast('❌ Failed to create token — check console', 'error');
+    }
+}
+
+// ─── Actions ────────────────────────────────────────────────
+async function triggerPegSync() {
+    const result = await api('/internal/custom-tokens/peg-sync/all', { method: 'POST' });
+    if (result) {
+        showToast(`🔗 Peg sync: ${result.synced} synced, ${result.skipped} ok, ${result.errors} errors`);
+        setTimeout(fetchAll, 2000);
+    } else {
+        showToast('❌ Peg sync failed', 'error');
+    }
+}
+
+async function restartSimulations() {
+    const result = await api('/internal/custom-tokens/simulation/restart-all', { method: 'POST' });
+    if (result) {
+        showToast('🎰 All simulations restarted');
+    } else {
+        showToast('❌ Failed to restart simulations', 'error');
+    }
+}
+
+// ─── Refresh Countdown ─────────────────────────────────────
+let nextRefresh = Date.now() + REFRESH_MS;
+function tickRefreshTimer() {
+    const left = Math.max(0, Math.ceil((nextRefresh - Date.now()) / 1000));
+    $('refreshTimer').textContent = `auto-refresh ${left}s`;
+}
+setInterval(tickRefreshTimer, 500);
+
+// ─── Master Fetch ───────────────────────────────────────────
+async function fetchAll() {
+    nextRefresh = Date.now() + REFRESH_MS;
+    try {
+        await Promise.all([renderTokens(), renderExchangePrices(), renderBands()]);
+        updateConnStatus('connected');
+        $('pulseIndicator').style.background = 'var(--green)';
+    } catch {
+        updateConnStatus('disconnected');
+        $('pulseIndicator').style.background = 'var(--red)';
+    }
+}
+
+// ─── Init ───────────────────────────────────────────────────
+if (!AUTH) { fetchAll(); }
+setInterval(fetchAll, REFRESH_MS);
+</script>
+</body>
+</html>

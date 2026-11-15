@@ -1,0 +1,111 @@
+# Build
+dist
+
+# Dependencies
+node_modules
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Yarn Berry / PnP
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+*.pem
+*.key
+*.crt
+
+.env.local
+# Repo hygiene
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+.cache/
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Deco Exchange: local secrets and generated artifacts
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
+!.env.sample
+!.env.*.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*.log
+*.dump
+*.sql.gz
+*.sqlite
+*.db
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.turbo/
+.pnp.*
+credentials/
+*.asc
+*.gpg
+.git-credentials
+*.firebase-adminsdk*.json
+*google-credentials*.json
+*service-account*.json
+.npmrc
+.pypirc
+.netrc
+.aws/credentials
+**/.aws/credentials
+.docker/config.json
+**/.docker/config.json
