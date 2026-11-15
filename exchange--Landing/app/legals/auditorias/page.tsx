@@ -165,8 +165,8 @@ export default function AuditoriasPage() {
 
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestros procesos de auditoría o para solicitar copias de los informes de auditoría, por favor contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:auditorias@deco-exchange.com" className="text-primary hover:underline">
-              auditorias@deco-exchange.com
+            <Link href="mailto:auditorias@example.invalid" className="text-primary hover:underline">
+              auditorias@example.invalid
             </Link>
           </p>
         </div>

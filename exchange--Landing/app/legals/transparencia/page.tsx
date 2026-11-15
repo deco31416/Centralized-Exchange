@@ -175,8 +175,8 @@ export default function TransparenciaPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestra política de transparencia, custodia de fondos o solvencia financiera, por
             favor contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:transparencia@deco-exchange.com" className="text-primary hover:underline">
-              transparencia@deco-exchange.com
+            <Link href="mailto:transparencia@example.invalid" className="text-primary hover:underline">
+              transparencia@example.invalid
             </Link>
           </p>
         </div>

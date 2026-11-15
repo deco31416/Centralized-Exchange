@@ -240,8 +240,8 @@ export default function CuentaADTPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre la Cuenta ADT o para solicitar una demostración, por favor contáctenos a través
             del correo electrónico:{" "}
-            <Link href="mailto:adt@deco-exchange.com" className="text-primary hover:underline">
-              adt@deco-exchange.com
+            <Link href="mailto:adt@example.invalid" className="text-primary hover:underline">
+              adt@example.invalid
             </Link>
           </p>
         </div>

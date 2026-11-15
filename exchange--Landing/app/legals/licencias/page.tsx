@@ -156,8 +156,8 @@ export default function LicenciasPage() {
 
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestro roadmap regulatorio o establecer contacto con el equipo de cumplimiento, puede escribirnos a:{" "}
-            <Link href="mailto:licencias@deco-exchange.com" className="text-primary hover:underline">
-              licencias@deco-exchange.com
+            <Link href="mailto:licencias@example.invalid" className="text-primary hover:underline">
+              licencias@example.invalid
             </Link>
           </p>
 

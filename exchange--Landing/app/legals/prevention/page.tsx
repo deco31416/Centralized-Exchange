@@ -98,7 +98,7 @@ export default function PrevencionPage() {
             </li>
             <li className="text-muted-foreground">
               Verifique siempre la URL antes de ingresar información sensible. Nuestra URL oficial es
-              https://www.deco-exchange.com.
+              https://example.invalid.
             </li>
             <li className="text-muted-foreground">
               Tenga cuidado con los correos electrónicos o mensajes que solicitan información personal o financiera.
@@ -115,8 +115,8 @@ export default function PrevencionPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Si sospecha que ha sido víctima de fraude o ha identificado actividad sospechosa, por favor contáctenos
             inmediatamente a través del correo electrónico:{" "}
-            <Link href="mailto:fraud@deco-exchange.com" className="text-primary hover:underline">
-              fraud@deco-exchange.com
+            <Link href="mailto:fraud@example.invalid" className="text-primary hover:underline">
+              fraud@example.invalid
             </Link>
           </p>
         </div>

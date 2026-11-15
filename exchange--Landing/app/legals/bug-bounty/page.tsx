@@ -50,19 +50,19 @@ export default function BugBountyPage() {
 
           <ul className="list-disc pl-6 space-y-2 mt-4">
             <li className="text-muted-foreground">
-              <strong>Sitio web principal:</strong> https://www.deco-exchange.com y sus subdominios
+              <strong>Sitio web principal:</strong> https://example.invalid y sus subdominios
             </li>
             <li className="text-muted-foreground">
-              <strong>Plataforma de clientes:</strong> https://app.deco-exchange.com
+              <strong>Plataforma de clientes:</strong> https://app.example.invalid
             </li>
             <li className="text-muted-foreground">
-              <strong>API pública:</strong> https://api.deco-exchange.com
+              <strong>API pública:</strong> https://api.example.invalid
             </li>
             <li className="text-muted-foreground">
               <strong>Aplicaciones móviles:</strong> deco-exchange para Android e iOS
             </li>
             <li className="text-muted-foreground">
-              <strong>Plataforma de corresponsales:</strong> https://partners.deco-exchange.com
+              <strong>Plataforma de corresponsales:</strong> https://partners.example.invalid
             </li>
           </ul>
 
@@ -159,12 +159,12 @@ export default function BugBountyPage() {
             <li>
               <p className="text-muted-foreground leading-relaxed">
                 <strong>Envío del reporte:</strong> Enviar un informe detallado a{" "}
-                <Link href="mailto:security@deco-exchange.com" className="text-primary hover:underline">
-                  security@deco-exchange.com
+                <Link href="mailto:security@example.invalid" className="text-primary hover:underline">
+                  security@example.invalid
                 </Link>{" "}
                 o a través de nuestro portal de seguridad en{" "}
-                <Link href="https://security.deco-exchange.com" className="text-primary hover:underline">
-                  https://security.deco-exchange.com
+                <Link href="https://security.example.invalid" className="text-primary hover:underline">
+                  https://security.example.invalid
                 </Link>
                 .
               </p>
@@ -257,8 +257,8 @@ export default function BugBountyPage() {
           <p className="text-muted-foreground leading-relaxed">
             Los investigadores que reporten vulnerabilidades válidas serán reconocidos en nuestro Hall of Fame, visible
             en{" "}
-            <Link href="https://security.deco-exchange.com/hall-of-fame" className="text-primary hover:underline">
-              https://security.deco-exchange.com/hall-of-fame
+            <Link href="https://security.example.invalid/hall-of-fame" className="text-primary hover:underline">
+              https://security.example.invalid/hall-of-fame
             </Link>
             , a menos que prefieran permanecer anónimos.
           </p>
@@ -266,8 +266,8 @@ export default function BugBountyPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestro programa Bug Bounty o para resolver dudas específicas, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:bugbounty@deco-exchange.com" className="text-primary hover:underline">
-              bugbounty@deco-exchange.com
+            <Link href="mailto:bugbounty@example.invalid" className="text-primary hover:underline">
+              bugbounty@example.invalid
             </Link>
           </p>
         </div>

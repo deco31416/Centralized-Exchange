@@ -108,8 +108,8 @@ export default function ComunidadPage() {
           <p className="text-muted-foreground mt-4 leading-relaxed">
             Para reportar violaciones o para más información sobre nuestras Reglas de Comunidad, por favor contáctenos a
             través del correo electrónico:{" "}
-            <Link href="mailto:community@deco-exchange.com" className="text-primary hover:underline">
-              community@deco-exchange.com
+            <Link href="mailto:community@example.invalid" className="text-primary hover:underline">
+              community@example.invalid
             </Link>
           </p>
         </div>

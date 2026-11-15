@@ -303,8 +303,8 @@ export default function SponsorAdsPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre el programa Sponsor Ads o para solicitar una propuesta personalizada, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:publicidad@deco-exchange.com" className="text-primary hover:underline">
-              publicidad@deco-exchange.com
+            <Link href="mailto:publicidad@example.invalid" className="text-primary hover:underline">
+              publicidad@example.invalid
             </Link>
           </p>
         </div>

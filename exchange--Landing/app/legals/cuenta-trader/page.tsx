@@ -226,8 +226,8 @@ export default function CuentaTraderPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre la Cuenta Trader o para abrir una cuenta, por favor contáctenos a través del
             correo electrónico:{" "}
-            <Link href="mailto:trading@deco-exchange.com" className="text-primary hover:underline">
-              trading@deco-exchange.com
+            <Link href="mailto:trading@example.invalid" className="text-primary hover:underline">
+              trading@example.invalid
             </Link>
           </p>
         </div>

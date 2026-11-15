@@ -246,8 +246,8 @@ export default function ScoreTradersPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre el programa Score Traders o para consultar tu puntuación actual, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:scoretraders@deco-exchange.com" className="text-primary hover:underline">
-              scoretraders@deco-exchange.com
+            <Link href="mailto:scoretraders@example.invalid" className="text-primary hover:underline">
+              scoretraders@example.invalid
             </Link>
           </p>
         </div>

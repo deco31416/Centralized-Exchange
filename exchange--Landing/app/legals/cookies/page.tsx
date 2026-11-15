@@ -108,8 +108,8 @@ export default function CookiesPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestra Política de Cookies, por favor contáctenos a través del correo
             electrónico:{" "}
-            <Link href="mailto:privacy@deco-exchange.com" className="text-primary hover:underline">
-              privacy@deco-exchange.com
+            <Link href="mailto:privacy@example.invalid" className="text-primary hover:underline">
+              privacy@example.invalid
             </Link>
           </p>
 

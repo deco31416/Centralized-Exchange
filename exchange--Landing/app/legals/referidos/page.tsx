@@ -266,8 +266,8 @@ export default function ReferidosPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestro Programa de Referidos o para resolver dudas específicas, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:referidos@deco-exchange.com" className="text-primary hover:underline">
-              referidos@deco-exchange.com
+            <Link href="mailto:referidos@example.invalid" className="text-primary hover:underline">
+              referidos@example.invalid
             </Link>
           </p>
         </div>

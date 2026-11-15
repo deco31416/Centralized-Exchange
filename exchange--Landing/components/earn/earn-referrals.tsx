@@ -17,7 +17,7 @@ import {
 import { earnReferralStats, earnReferralUsers } from "./earn-data"
 
 const REFERRAL_CODE = "DECO-EMB-31416"
-const REFERRAL_URL = "https://deco.exchange/register?ref=DECO-EMB-31416"
+const REFERRAL_URL = "https://exchange.example.invalid/register?ref=DECO-EMB-31416"
 
 type ReferralModal = "share" | "rules" | "payout" | null
 

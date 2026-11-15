@@ -432,7 +432,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/).
 
 ### Añadido
 - **Mockup mobile DECO Wallet** importado y componentizado en `components/wallet/`, con assets propios de monedas, fiat, stablecoin, altcoins y QR.
-- **`ExchangeAccessBadge`** para reemplazar el acceso de inversionista anterior por un badge DECO Exchange enlazado a `https://exchange.deco31416.com/`.
+- **`ExchangeAccessBadge`** para reemplazar el acceso de inversionista anterior por un badge DECO Exchange enlazado a `https://exchange.example.invalid/`.
 - **`share-preview-card.tsx`** para la tarjeta de compartir en onboarding social con imagen Cloudinary de DECO Exchange.
 - **QR principal light/dark** para que el acceso movil mantenga contraste correcto en ambos temas.
 

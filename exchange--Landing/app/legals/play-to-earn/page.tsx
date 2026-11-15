@@ -248,8 +248,8 @@ export default function PlayToEarnPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre el programa Play to Earn o para resolver dudas específicas, por favor contáctenos
             a través del correo electrónico:{" "}
-            <Link href="mailto:play2earn@deco-exchange.com" className="text-primary hover:underline">
-              play2earn@deco-exchange.com
+            <Link href="mailto:play2earn@example.invalid" className="text-primary hover:underline">
+              play2earn@example.invalid
             </Link>
           </p>
         </div>

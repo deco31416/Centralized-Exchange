@@ -180,8 +180,8 @@ export default function TarjetasPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestras tarjetas o para solicitar una, por favor contáctenos a través del correo
             electrónico:{" "}
-            <Link href="mailto:tarjetas@deco-exchange.com" className="text-primary hover:underline">
-              tarjetas@deco-exchange.com
+            <Link href="mailto:tarjetas@example.invalid" className="text-primary hover:underline">
+              tarjetas@example.invalid
             </Link>
           </p>
         </div>

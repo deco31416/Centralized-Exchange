@@ -245,8 +245,8 @@ export default function WhiteLabelPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestro programa White Label o para solicitar convertirse en corresponsal, por
             favor contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:corresponsales@deco-exchange.com" className="text-primary hover:underline">
-              corresponsales@deco-exchange.com
+            <Link href="mailto:corresponsales@example.invalid" className="text-primary hover:underline">
+              corresponsales@example.invalid
             </Link>
           </p>
         </div>

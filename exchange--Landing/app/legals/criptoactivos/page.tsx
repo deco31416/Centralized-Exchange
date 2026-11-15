@@ -193,8 +193,8 @@ export default function CriptoactivosPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestros servicios de criptoactivos o para resolver dudas específicas, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:crypto@deco-exchange.com" className="text-primary hover:underline">
-              crypto@deco-exchange.com
+            <Link href="mailto:crypto@example.invalid" className="text-primary hover:underline">
+              crypto@example.invalid
             </Link>
           </p>
         </div>

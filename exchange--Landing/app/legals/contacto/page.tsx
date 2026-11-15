@@ -55,7 +55,7 @@ export default function ContactoPage() {
                   <p className="mb-4">WhatsApp: +57 300 123 4567</p>
 
                   <h3 className="text-lg font-medium mb-3">Correo electrónico</h3>
-                  <p className="mb-1">General: info@deco-exchange.com</p>
+                  <p className="mb-1">General: info@example.invalid</p>
                   <p className="mb-1">Soporte: contacto@deco31416.com</p>
                   <p>Legal: contacto@deco31416.com</p>
                 </div>

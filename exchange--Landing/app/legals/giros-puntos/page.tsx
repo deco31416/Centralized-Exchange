@@ -227,8 +227,8 @@ export default function GirosPuntosPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre Puntos deco-exchange o para consultar su saldo de puntos, por favor contáctenos a través
             del correo electrónico:{" "}
-            <Link href="mailto:puntos@deco-exchange.com" className="text-primary hover:underline">
-              puntos@deco-exchange.com
+            <Link href="mailto:puntos@example.invalid" className="text-primary hover:underline">
+              puntos@example.invalid
             </Link>
           </p>
         </div>

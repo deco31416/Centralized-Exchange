@@ -163,8 +163,8 @@ export default function ComisionesPage() {
 
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestras comisiones o para consultar casos especiales, por favor contáctenos a través del correo electrónico:{" "}
-            <a href="mailto:comisiones@deco-exchange.com" className="text-primary hover:underline">
-              comisiones@deco-exchange.com
+            <a href="mailto:comisiones@example.invalid" className="text-primary hover:underline">
+              comisiones@example.invalid
             </a>
           </p>
         </div>

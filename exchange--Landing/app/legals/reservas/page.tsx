@@ -166,8 +166,8 @@ export default function ReservasPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestra Prueba de Reservas o para solicitar detalles adicionales, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:reservas@deco-exchange.com" className="text-primary hover:underline">
-              reservas@deco-exchange.com
+            <Link href="mailto:reservas@example.invalid" className="text-primary hover:underline">
+              reservas@example.invalid
             </Link>
           </p>
         </div>

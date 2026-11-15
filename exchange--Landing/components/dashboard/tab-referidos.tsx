@@ -78,7 +78,7 @@ export default function TabReferidos() {
 
   const refCode = userId ? buildRefCode(userId) : null
   const referralUrl = refCode
-    ? `${typeof window !== "undefined" ? window.location.origin : "https://deco-exchange.com"}/register?ref=${refCode}`
+    ? `${typeof window !== "undefined" ? window.location.origin : "https://example.invalid"}/register?ref=${refCode}`
     : null
 
   async function handleCopy() {

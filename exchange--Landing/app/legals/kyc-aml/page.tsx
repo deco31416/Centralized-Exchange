@@ -99,8 +99,8 @@ export default function KycAmlPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestras políticas de KYC/AML, por favor contacte a nuestro Oficial de
             Cumplimiento a través del correo electrónico:{" "}
-            <Link href="mailto:compliance@deco-exchange.com" className="text-primary hover:underline">
-              compliance@deco-exchange.com
+            <Link href="mailto:compliance@example.invalid" className="text-primary hover:underline">
+              compliance@example.invalid
             </Link>
           </p>
         </div>

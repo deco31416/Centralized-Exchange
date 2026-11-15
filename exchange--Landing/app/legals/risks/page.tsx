@@ -102,8 +102,8 @@ export default function RiesgosPage() {
           <p className="text-muted-foreground mt-4 leading-relaxed">
             Para más información sobre los riesgos asociados con nuestros servicios, por favor contáctenos a través del
             correo electrónico:{" "}
-            <Link href="mailto:risk@deco-exchange.com" className="text-primary hover:underline">
-              risk@deco-exchange.com
+            <Link href="mailto:risk@example.invalid" className="text-primary hover:underline">
+              risk@example.invalid
             </Link>
           </p>
         </div>

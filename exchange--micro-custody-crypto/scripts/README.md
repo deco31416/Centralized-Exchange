@@ -215,6 +215,6 @@ For production, you should:
 ## Questions?
 
 Check the module documentation:
-- [1.LEDGER-DOCUMENTATION.md](../1.LEDGER-DOCUMENTATION.md)
-- [2.SWAP-DOCUMENTATION.md](../2.SWAP-DOCUMENTATION.md)
-- [3.PRICING-DOCUMENTATION.md](../3.PRICING-DOCUMENTATION.md)
+- [Ledger module](../src/ledger/ledger.module.ts)
+- [Swap module](../src/swap/swap.module.ts)
+- [Pricing module](../src/pricing/pricing.module.ts)

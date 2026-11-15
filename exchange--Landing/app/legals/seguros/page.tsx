@@ -144,8 +144,8 @@ export default function SegurosPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestras pólizas de seguro o para iniciar una reclamación, por favor contáctenos
             a través del correo electrónico:{" "}
-            <Link href="mailto:seguros@deco-exchange.com" className="text-primary hover:underline">
-              seguros@deco-exchange.com
+            <Link href="mailto:seguros@example.invalid" className="text-primary hover:underline">
+              seguros@example.invalid
             </Link>
           </p>
         </div>

@@ -89,8 +89,8 @@ export default function PrivacidadPage() {
               <p className="text-muted-foreground leading-relaxed">
                 Los Titulares de datos personales podrán consultar, en cualquier momento, las Políticas y Procedimientos
                 para el Tratamiento de Datos Personales de la Compañía en el siguiente link:{" "}
-                <Link href="https://www.deco-exchange.com/privacy" className="text-primary hover:underline">
-                  https://www.deco-exchange.com/privacy
+                <Link href="https://example.invalid/privacy" className="text-primary hover:underline">
+                  https://example.invalid/privacy
                 </Link>
                 . Este contiene los lineamientos, directrices y procedimientos sobre el tratamiento de la información
                 personal por parte de la Compañía y la forma de hacer efectivos los derechos, consultas y solicitudes de
@@ -103,19 +103,19 @@ export default function PrivacidadPage() {
                 La Compañía podrá ser contactada a través de los siguientes correos electrónicos:
               </p>
               <ul className="list-disc pl-8 mt-2 space-y-1">
-                <li className="text-muted-foreground">habeasdata@deco-exchange.com</li>
-                <li className="text-muted-foreground">contacto@deco-exchange.com</li>
-                <li className="text-muted-foreground">privacy@deco-exchange.com</li>
-                <li className="text-muted-foreground">admin@deco-exchange.com</li>
-                <li className="text-muted-foreground">soporte@deco-exchange.com</li>
+                <li className="text-muted-foreground">habeasdata@example.invalid</li>
+                <li className="text-muted-foreground">contacto@example.invalid</li>
+                <li className="text-muted-foreground">privacy@example.invalid</li>
+                <li className="text-muted-foreground">admin@example.invalid</li>
+                <li className="text-muted-foreground">soporte@example.invalid</li>
               </ul>
             </li>
           </ol>
 
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Así mismo, podrán ejercerse derechos a través de la página web de la Compañía (
-            <Link href="https://www.deco-exchange.com/" className="text-primary hover:underline">
-              https://www.deco-exchange.com/
+            <Link href="https://example.invalid/" className="text-primary hover:underline">
+              https://example.invalid/
             </Link>
             ).
           </p>

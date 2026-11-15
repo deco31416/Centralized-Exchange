@@ -200,7 +200,7 @@ def create_transfer(sender_id, recipient_id, amount, currency):
             description="Acceda a nuestro portal para desarrolladores para obtener más recursos y herramientas."
             link={{
               text: "Ir al portal",
-              href: "https://developers.deco-exchange.com"
+              href: "https://developers.example.invalid"
             }}
           />
           <InfoCard
@@ -208,7 +208,7 @@ def create_transfer(sender_id, recipient_id, amount, currency):
             description="Pruebe la API en nuestro entorno sandbox antes de implementarla en producción."
             link={{
               text: "Acceder al sandbox",
-              href: "https://sandbox.deco-exchange.com",
+              href: "https://sandbox.example.invalid",
             }}
           />
         </div>

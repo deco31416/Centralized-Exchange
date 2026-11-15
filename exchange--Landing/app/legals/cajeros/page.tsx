@@ -185,8 +185,8 @@ export default function CajerosPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para reportar incidentes, problemas con cajeros o para más información, por favor contáctenos a través del
             correo electrónico:{" "}
-            <Link href="mailto:cajeros@deco-exchange.com" className="text-primary hover:underline">
-              cajeros@deco-exchange.com
+            <Link href="mailto:cajeros@example.invalid" className="text-primary hover:underline">
+              cajeros@example.invalid
             </Link>
           </p>
         </div>

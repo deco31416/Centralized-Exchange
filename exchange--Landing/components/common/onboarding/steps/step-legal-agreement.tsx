@@ -72,7 +72,7 @@ export function StepLegalAgreement({ data, update, onNext, onBack, isSubmitting 
                     Este acuerdo constituye un compromiso legal vinculante entre el usuario y deco-exchange. Nos reservamos el derecho de modificar sus términos en cualquier momento y sin previo aviso.
                 </p>
                 <p>
-                    Para más información, te invitamos a consultar los <a href="https://www.deco-exchange.com/legals" target="_blank" className="underline">Términos Legales de deco-exchange</a>.
+                    Para más información, te invitamos a consultar los <a href="https://example.invalid/legals" target="_blank" className="underline">Términos Legales de deco-exchange</a>.
                 </p>
             </div>
 

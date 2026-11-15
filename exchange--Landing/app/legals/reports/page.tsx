@@ -68,8 +68,8 @@ export default function DenunciasPage() {
           <ul className="list-disc pl-6 space-y-2 mt-4">
             <li className="text-muted-foreground">
               <strong>Correo Electrónico:</strong>{" "}
-              <Link href="mailto:denuncias@deco-exchange.com" className="text-primary hover:underline">
-                denuncias@deco-exchange.com
+              <Link href="mailto:denuncias@example.invalid" className="text-primary hover:underline">
+                denuncias@example.invalid
               </Link>
             </li>
             <li className="text-muted-foreground">
@@ -99,8 +99,8 @@ export default function DenunciasPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestro Canal para Informes, por favor contacte a nuestro Oficial de Cumplimiento
             a través del correo electrónico:{" "}
-            <Link href="mailto:compliance@deco-exchange.com" className="text-primary hover:underline">
-              compliance@deco-exchange.com
+            <Link href="mailto:compliance@example.invalid" className="text-primary hover:underline">
+              compliance@example.invalid
             </Link>
           </p>
         </div>

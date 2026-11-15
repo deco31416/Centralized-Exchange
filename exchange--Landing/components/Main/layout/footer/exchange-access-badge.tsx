@@ -5,7 +5,7 @@ import { LockKeyhole, ArrowUpRight } from "lucide-react"
 export function ExchangeAccessBadge() {
   return (
     <a
-      href="https://exchange.deco31416.com/"
+      href="https://exchange.example.invalid/"
       target="_blank"
       rel="noopener noreferrer"
       className="group inline-flex items-center gap-3 rounded-md border border-foreground/70 px-4 py-3 text-foreground transition-colors hover:border-primary hover:text-primary"

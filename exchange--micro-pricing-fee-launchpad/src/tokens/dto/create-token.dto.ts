@@ -110,7 +110,7 @@ export class CreateTokenDto {
     @IsString()
     description?: string;
 
-    @ApiPropertyOptional({ example: 'https://cdn.deco31416.com/icons/DECOX-usd.png' })
+    @ApiPropertyOptional({ example: 'https://cdn.example.invalid/icons/DECOX-usd.png' })
     @IsOptional()
     @IsString()
     iconUrl?: string;

@@ -284,8 +284,8 @@ export default function LeeYGanaPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre el programa Lee y Gana o para resolver dudas específicas, por favor contáctenos a
             través del correo electrónico:{" "}
-            <Link href="mailto:educacion@deco-exchange.com" className="text-primary hover:underline">
-              educacion@deco-exchange.com
+            <Link href="mailto:educacion@example.invalid" className="text-primary hover:underline">
+              educacion@example.invalid
             </Link>
           </p>
         </div>

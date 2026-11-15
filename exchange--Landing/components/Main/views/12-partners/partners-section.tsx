@@ -33,7 +33,7 @@ const partners = [
   },
   {
     name: "DECO Exchange",
-    href: "https://exchange.deco31416.com/",
+    href: "https://exchange.example.invalid/",
     type: "Exchange",
     description: "Plataforma central del ecosistema para intercambio, pagos y operación digital.",
   },

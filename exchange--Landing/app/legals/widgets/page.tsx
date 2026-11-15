@@ -255,8 +255,8 @@ export default function WidgetsPage() {
           <p className="text-muted-foreground mt-8 leading-relaxed">
             Para más información sobre nuestros widgets o para solicitar acceso a nuestra API de integración, por favor
             contáctenos a través del correo electrónico:{" "}
-            <Link href="mailto:widgets@deco-exchange.com" className="text-primary hover:underline">
-              widgets@deco-exchange.com
+            <Link href="mailto:widgets@example.invalid" className="text-primary hover:underline">
+              widgets@example.invalid
             </Link>
           </p>
         </div>
