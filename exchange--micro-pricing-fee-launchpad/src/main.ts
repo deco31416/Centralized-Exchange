@@ -48,7 +48,7 @@ async function bootstrap() {
     const appName      = process.env.APP_NAME || 'DECO EXCHANGE';
     const swaggerDesc  = process.env.SWAGGER_DESCRIPTION
         || 'Microservicio de pricing para tokens de launchpad: gestión de tokens custom, sistema de peg (fiat/crypto), motor de simulación algorítmica, entropía interna, bandas de precio y alertas semáforo.';
-    const contactUrl   = process.env.CONTACT_URL || 'https://DECOEXCHANGE.com';
+    const contactUrl   = process.env.CONTACT_URL || 'https://exchange.example.invalid';
     const contactEmail = process.env.CONTACT_EMAIL || 'contact@example.invalid';
     const licenseName  = process.env.LICENSE_NAME || 'MIT';
     const licenseUrl   = process.env.LICENSE_URL || 'https://opensource.org/licenses/MIT';

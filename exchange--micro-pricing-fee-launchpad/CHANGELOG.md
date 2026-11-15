@@ -110,7 +110,7 @@ All notable changes to this project will be documented in this file.
 ### Changed — Branding
 - Banner changed from "DECO" to "LAUNCH" ASCII art
 - Swagger title: "Launchpad Pricing"
-- Default contact URLs updated to DECOEXCHANGE.com
+- Default contact URLs updated to exchange.example.invalid
 - All tags and descriptions updated for launchpad context
 
 ---

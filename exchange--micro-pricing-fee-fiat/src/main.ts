@@ -48,7 +48,7 @@ async function bootstrap() {
     const appName      = process.env.APP_NAME || 'DECO EXCHANGE';
     const swaggerDesc  = process.env.SWAGGER_DESCRIPTION
         || 'Microservicio de precios fiat con agregación multi-source, motor de entropía, bandas de precio (admin/auto), deltas por corredor, y sistema de alertas tipo semáforo.';
-    const contactUrl   = process.env.CONTACT_URL || 'https://DECOEXCHANGE.com';
+    const contactUrl   = process.env.CONTACT_URL || 'https://exchange.example.invalid';
     const contactEmail = process.env.CONTACT_EMAIL || 'contact@example.invalid';
     const licenseName  = process.env.LICENSE_NAME || 'MIT';
     const licenseUrl   = process.env.LICENSE_URL || 'https://opensource.org/licenses/MIT';
